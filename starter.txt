@@ -1,0 +1,15 @@
+BASECAMP_USER=basecamp_dev BASECAMP_PWD=basecamp_dev_pwd BASECAMP_HOST=localhost BASECAMP_DB=basecamp_db python3
+from os import getenv
+user = getenv('BASECAMP_USER')
+host = getenv('BASECAMP_HOST')
+pwd = getenv('BASECAMP_PWD')
+db = getenv('BASECAMP_DB')
+
+from models.user import User
+from models.project import Project
+from models.member import Member
+from models import storage
+
+BASECAMP_USER=basecamp_dev BASECAMP_PWD=basecamp_dev_pwd BASECAMP_HOST=localhost BASECAMP_DB=basecamp_db tmux new-session -d 'gunicorn --bind 0.0.0.0:8000 api.v1.app:app'
+
+engine = create_engine(f"mysql+mysqldb://{user}:{pwd}@{host}/{db}", pool_pre_ping=True)
