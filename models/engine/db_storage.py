@@ -40,6 +40,9 @@ class DBStorage:
         from models.user import User
         from models.project import Project
         from models.member import Member
+        from models.attachment import Attachment
+        from models.thread import Thread
+        from models.message import Message
 
         return {
             "User": User,
