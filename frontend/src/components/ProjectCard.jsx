@@ -1,7 +1,7 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaEdit } from "react-icons/fa";
+import { FaEdit, FaComments } from "react-icons/fa"; // Import the thread icon
 
 function ProjectCard(props) {
   const navigate = useNavigate();
@@ -21,17 +21,23 @@ function ProjectCard(props) {
             <strong className="text-primary">Members:</strong> {props.members.join(", ")}
           </p>
         )}
-        {props.admin === true && <button className="d-flex btn btn-link justify-content-between align-items-center">
-          <FaEdit
-            size={20}
-            className="edit-icon"
-            onClick={() => {
+        {props.admin === true && (
+          <div className="d-flex justify-content-between align-items-center">
+            <button className="btn btn-link" onClick={() => {
               navigate(`/projects/edit/${props.id}`, {
                 state: { projectData: props },
               });
-            }}
-          />
-        </button>}
+            }}>
+              <FaEdit size={20} className="edit-icon" />
+            </button>
+            <button className="btn btn-link" onClick={() => {
+              // Navigate to the discussion page
+              navigate(`/projects/${props.id}/discussion`);
+            }}>
+              <FaComments size={20} className="thread-icon" />
+            </button>
+          </div>
+        )}
       </Card.Body>
     </Card>
   );

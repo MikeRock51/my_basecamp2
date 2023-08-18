@@ -25,6 +25,7 @@ function App() {
           <Route path="/projects/dashboard" element={<UserDashboard />} />
           <Route path="/projects/edit/:id" element={<EditProject />} />
           <Route path="/users/edit/:id" element={<EditUser />} />
+          <Route path="/projects/edit/:id" element={<EditProject />} />
         </Routes>
       </div>
     </Router>
