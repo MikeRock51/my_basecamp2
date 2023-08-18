@@ -29,7 +29,7 @@ function SignIn() {
     setPending(true);
     try {
       const userData = await axios.post(
-        "http://13.48.5.194:8000/api/v1/users/auth",
+        "http://127.0.0.1:8000/api/v1/users/auth",
         formData
       );
       sessionStorage.userData = JSON.stringify(userData.data);

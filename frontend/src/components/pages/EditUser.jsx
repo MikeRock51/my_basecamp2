@@ -28,7 +28,7 @@ function EditUser() {
     console.log(formData);
     try {
       await axios.put(
-        `http://13.48.5.194:8000/api/v1/users/${userData.id}`,
+        `127.0.0.1:8000/api/v1/users/${userData.id}`,
         formData
       );
       navigate('/projects/dashboard', {
@@ -44,7 +44,7 @@ function EditUser() {
 
   async function handleDelete() {
     try {
-    await axios.delete(`http://13.48.5.194:8000/api/v1/users/${userData.id}`)
+    await axios.delete(`127.0.0.1:8000/api/v1/users/${userData.id}`)
     console.log(`user ${userData.name} deleted successfully`);
     sessionStorage.clear();
     navigate('/sign-in');

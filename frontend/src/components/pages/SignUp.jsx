@@ -47,7 +47,7 @@ function SignUp() {
 
     try {
       await axios.post(
-        "http://13.48.5.194:8000/api/v1/users",
+        "http://127.0.0.1:8000/api/v1/users",
         formData
       );
       console.log("Account created successfully");

@@ -30,7 +30,7 @@ function CreateProject() {
     formData.author = JSON.parse(sessionStorage.userData).email;
     try {
       await axios.post(
-        `http://13.48.5.194:8000/api/v1/projects/${userID}`,
+        `http://127.0.0.1:8000/api/v1/projects/${userID}`,
         formData
       );
       console.log("Project created successfully");

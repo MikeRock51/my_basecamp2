@@ -6,20 +6,21 @@ import axios from "axios";
 
 function UserDashboard() {
   const [userProjects, setUserProjects] = useState([]);
-  const [allProjects, setAllProjects] = useState([]);
   const [sharedProjects, setSharedProjects] = useState([]);
+  const [allProjects, setAllProjects] = useState([]);
   const currentUser = JSON.parse(sessionStorage.userData);
 
   async function fetchProjects() {
     try {
       const createdByMe = await axios.get(
-        `http://13.48.5.194:8000/api/v1/users/projects/${currentUser.id}`
+        `http://127.0.0.1:8000/api/v1/users/projects/${currentUser.id}`
       );
       const sharedWithMe = await axios.get(
-        `http://13.48.5.194:8000/api/v1/users/projects/shared/${currentUser.email}`
+        `http://127.0.0.1:8000/api/v1/users/projects/shared/${currentUser.email}`
       );
       setUserProjects(createdByMe.data);
       setSharedProjects(sharedWithMe.data);
+      setAllProjects([...createdByMe.data, ...sharedWithMe.data]);
     } catch (err) {
       console.log("An error occurred while fetching projects");
     }
@@ -28,7 +29,6 @@ function UserDashboard() {
   const navigate = useNavigate();
   useEffect(() => {
     fetchProjects();
-    setAllProjects([...userProjects, ...sharedProjects]);
   }, []);
 
   return (
