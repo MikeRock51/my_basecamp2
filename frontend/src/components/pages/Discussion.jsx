@@ -3,6 +3,7 @@ import { Container, Form, Button, Card, Accordion } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import axios from "axios";
+import Thread from "../Thread";
 
 function Discussion() {
   const location = useLocation();
@@ -83,18 +84,7 @@ function Discussion() {
           Start Thread
         </Button>
       </Form>{" "}
-      {/* <Accordion className="w-75">
-        {threads.map((thread, index) => (
-          <Card key={index}>
-            <Accordion.Toggle as={Card.Header} eventKey={index.toString()}>
-              Thread {index + 1}
-            </Accordion.Toggle>
-            <Accordion.Collapse eventKey={index.toString()}>
-              <Card.Body>{thread.content}</Card.Body>
-            </Accordion.Collapse>
-          </Card>
-        ))}
-      </Accordion> */}
+      <Thread />
     </Container>
   );
 }
