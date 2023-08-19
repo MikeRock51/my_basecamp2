@@ -28,3 +28,34 @@ def createThread():
     thread.save()
 
     return jsonify(thread.toDict()), 201
+
+@app_views.route('/threads/<threadId>', strict_slashes=False)
+def getThread(threadId):
+    """Retrieves the thread from storage based on the threadID"""
+    thread = storage.get(Thread, threadId)
+    if not thread:
+        abort(404)
+
+    messages = []
+    for message in thread.messages:
+        messages.append(message.toDict())
+
+    thread = thread.toDict()
+    thread['messages'] = messages
+
+    return jsonify(thread), 200
+
+
+@app_views.route('/projects/<projectId>/threads', strict_slashes=False)
+def getProjectThreads(projectId):
+    """Retrieves all the threads of a project based on projectID"""
+    project = storage.get(Project, projectId)
+    if not project:
+        abort(404)
+
+    threads = []
+
+    for thread in project.threads:
+        threads.append(thread.toDict())
+
+    return jsonify(threads), 200
