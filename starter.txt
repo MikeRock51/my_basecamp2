@@ -9,6 +9,9 @@ from models.user import User
 from models.project import Project
 from models.member import Member
 from models import storage
+from models.attachment import Attachment
+from models.thread import Thread
+from models.message import Message
 
 BASECAMP_USER=basecamp_dev BASECAMP_PWD=basecamp_dev_pwd BASECAMP_HOST=localhost BASECAMP_DB=basecamp_db tmux new-session -d 'gunicorn --bind 0.0.0.0:8000 api.v1.app:app'
 

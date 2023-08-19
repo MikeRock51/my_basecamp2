@@ -47,7 +47,10 @@ class DBStorage:
         return {
             "User": User,
             "Project": Project,
-            "Member": Member
+            "Member": Member,
+            "Thread": Thread,
+            "Attachment": Attachment,
+            "Message": Message
         }
     
     def all(self, obj=None) -> Dict:
