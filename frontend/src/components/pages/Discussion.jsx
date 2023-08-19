@@ -15,13 +15,20 @@ function Discussion() {
   async function fetchThreads() {
     setPending(true);
     try {
-    const response = await axios.get(`http://127.0.0.1:8000/projects/${projectData.id}/threads`)
+    const response = await axios.get(`http://127.0.0.1:8000/api/v1/projects/${projectData.id}/threads`)
     setThreads([...response.data])
     } catch (err) {
-      setError(err)
+      const error = err.response?.data?.Error;
+      setError( error|| "An error occured!");
+      console.log(error);
     }
     setPending(false);
   }
+
+  useEffect(() => {
+    fetchThreads();
+    console.log(threads);
+  }, [])
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
@@ -76,7 +83,7 @@ function Discussion() {
           Start Thread
         </Button>
       </Form>{" "}
-      <Accordion className="w-75">
+      {/* <Accordion className="w-75">
         {threads.map((thread, index) => (
           <Card key={index}>
             <Accordion.Toggle as={Card.Header} eventKey={index.toString()}>
@@ -87,7 +94,7 @@ function Discussion() {
             </Accordion.Collapse>
           </Card>
         ))}
-      </Accordion>
+      </Accordion> */}
     </Container>
   );
 }
