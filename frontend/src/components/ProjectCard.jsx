@@ -1,11 +1,11 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaComments } from "react-icons/fa"; // Import the thread icon
+import { FaEdit, FaComments } from "react-icons/fa";
 
 function ProjectCard(props) {
   const navigate = useNavigate();
-  
+
   return (
     <Card className="project-card mb-3">
       <div className="project-card-header">
@@ -18,22 +18,30 @@ function ProjectCard(props) {
         <p className="project-description">{props.description}</p>
         {props.members.length > 0 && (
           <p className="project-members">
-            <strong className="text-primary">Members:</strong> {props.members.join(", ")}
+            <strong className="text-primary">Members:</strong>{" "}
+            {props.members.join(", ")}
           </p>
         )}
         {props.admin === true && (
           <div className="d-flex justify-content-between align-items-center">
-            <button className="btn btn-link" onClick={() => {
-              navigate(`/projects/edit/${props.id}`, {
-                state: { projectData: props },
-              });
-            }}>
+            <button
+              className="btn btn-link"
+              onClick={() => {
+                navigate(`/projects/edit/${props.id}`, {
+                  state: { projectData: props },
+                });
+              }}
+            >
               <FaEdit size={20} className="edit-icon" />
             </button>
-            <button className="btn btn-link" onClick={() => {
-              // Navigate to the discussion page
-              navigate(`/projects/${props.id}/discussion`);
-            }}>
+            <button
+              className="btn btn-link"
+              onClick={() => {
+                navigate(`/projects/${props.id}/discussion`, {
+                  state: { projectData: props },
+                });
+              }}
+            >
               <FaComments size={20} className="thread-icon" />
             </button>
           </div>

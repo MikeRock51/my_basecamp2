@@ -12,6 +12,7 @@ import CreateProject from "./components/pages/CreateProject";
 import UserDashboard from "./components/pages/UserDashboard";
 import EditProject from "./components/pages/EditProject";
 import EditUser from "./components/pages/EditUser";
+import Discussion from "./components/pages/Discussion";
 
 function App() {
   return (
@@ -26,10 +27,10 @@ function App() {
           <Route path="/projects/edit/:id" element={<EditProject />} />
           <Route path="/users/edit/:id" element={<EditUser />} />
           <Route path="/projects/edit/:id" element={<EditProject />} />
+          <Route path="/projects/:projectId/discussion" element={<Discussion />} />
         </Routes>
       </div>
     </Router>
   );
 }
-
 export default App;
