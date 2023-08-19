@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Container, Form, Button, Card } from "react-bootstrap";
+import { Container, Form, Button, Card, Accordion } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
+import { FaPlus } from "react-icons/fa";
 
 function Discussion() {
   const location = useLocation();
   const [newDiscussion, setNewDiscussion] = useState("");
+  const [threads, setThreads] = useState([]); // Store the threads in state
   const projectData = location.state.projectData;
 
   const handleInputChange = (e) => {
@@ -13,13 +15,13 @@ function Discussion() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    
-  };
+  }
 
   function createNewDiscussion(e) {
     e.preventDefault();
-    // TODO: Handle submitting the new discussion
-    console.log("New discussion:", newDiscussion);
+    // Create a new thread and add it to the threads array
+    const newThread = { content: newDiscussion, replies: [] };
+    setThreads([...threads, newThread]);
     // Clear the input field
     setNewDiscussion("");
   }
@@ -28,19 +30,20 @@ function Discussion() {
     <Container className="">
       <h2 className="text-primary">{projectData.name}</h2>
       <p className="mb-4 fst-italic">Created by {projectData.author}</p>
-
       <Card className="mb-3 text-start w-75">
         <Card.Body>
           <h6>{projectData.description}</h6>
           <p className="mb-0">Members:</p>
           {projectData.members.map((member) => {
-            return <p className="mb-0 text-secondary fst-italic">{member}</p>
+            return <p className="mb-0 text-secondary fst-italic">{member}</p>;
           })}
         </Card.Body>
       </Card>
-
-      <Form onSubmit={createNewDiscussion}>
-        <Form.Group controlId="newDiscussion" className="w-50">
+      <Form onSubmit={createNewDiscussion} className="d-flex w-75">
+        <Form.Group
+          controlId="newDiscussion"
+          className="flex-grow-1 me-2 text-start"
+        >
           <Form.Label>Start New Discussion</Form.Label>
           <Form.Control
             as="input"
@@ -50,10 +53,27 @@ function Discussion() {
             required
           />
         </Form.Group>
-        <Button variant="primary" type="submit">
-          Start Discussion
+        <Button
+          variant="primary"
+          type="submit"
+          className="d-flex align-items-center mt-auto px-3"
+        >
+          <FaPlus className="me-1" />
+          Start Thread
         </Button>
-      </Form>
+      </Form>{" "}
+      <Accordion className="w-75">
+        {threads.map((thread, index) => (
+          <Card key={index}>
+            <Accordion.Toggle as={Card.Header} eventKey={index.toString()}>
+              Thread {index + 1}
+            </Accordion.Toggle>
+            <Accordion.Collapse eventKey={index.toString()}>
+              <Card.Body>{thread.content}</Card.Body>
+            </Accordion.Collapse>
+          </Card>
+        ))}
+      </Accordion>
     </Container>
   );
 }
