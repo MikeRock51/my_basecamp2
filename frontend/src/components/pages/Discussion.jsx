@@ -1,13 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, Form, Button, Card, Accordion } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
+import axios from "axios";
 
 function Discussion() {
   const location = useLocation();
   const [newDiscussion, setNewDiscussion] = useState("");
-  const [threads, setThreads] = useState([]); // Store the threads in state
+  const [threads, setThreads] = useState([]);
   const projectData = location.state.projectData;
+  const [error, setError] = useState("");
+  const [pending, setPending] = useState(false);
+
+  async function fetchThreads() {
+    setPending(true);
+    try {
+    const response = await axios.get(`http://127.0.0.1:8000/projects/${projectData.id}/threads`)
+    setThreads([...response.data])
+    } catch (err) {
+      setError(err)
+    }
+    setPending(false);
+  }
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
