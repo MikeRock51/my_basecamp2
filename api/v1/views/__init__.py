@@ -10,3 +10,4 @@ from api.v1.views.users import *
 from api.v1.views.projects import *
 from api.v1.views.attachments import *
 from api.v1.views.threads import *
+from api.v1.views.messages import *
