@@ -19,7 +19,7 @@ function Discussion() {
     setThreads([...response.data])
     } catch (err) {
       const error = err.response?.data?.Error;
-      setError( error|| "An error occured!");
+      setError( error|| "An error occurred!");
       console.log(error);
     }
     setPending(false);
