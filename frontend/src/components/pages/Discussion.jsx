@@ -4,32 +4,37 @@ import { useLocation } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
+import useFetch from "../utils/useFetch";
 
 function Discussion() {
   const location = useLocation();
   const [newDiscussion, setNewDiscussion] = useState("");
   const [threads, setThreads] = useState([]);
   const projectData = location.state.projectData;
-  const [error, setError] = useState("");
-  const [pending, setPending] = useState(false);
+  // const [error, setError] = useState("");
+  // const [pending, setPending] = useState(false);
 
-  async function fetchThreads() {
-    setPending(true);
-    try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/v1/projects/${projectData.id}/threads`)
-    setThreads([...response.data])
-    } catch (err) {
-      const error = err.response?.data?.Error;
-      setError( error|| "An error occurred!");
-      console.log(error);
-    }
-    setPending(false);
-  }
+  const {data, error} = useFetch(`/projects/${projectData.id}/threads`);
+  data && console.log(data);
+  error && console.log(error);
 
-  useEffect(() => {
-    fetchThreads();
-    console.log(threads);
-  }, [])
+  // async function fetchThreads() {
+  //   setPending(true);
+  //   try {
+  //   const response = await axios.get(`http://127.0.0.1:8000/api/v1/projects/${projectData.id}/threads`)
+  //   setThreads([...response.data])
+  //   } catch (err) {
+  //     const error = err.response?.data?.Error;
+  //     setError( error|| "An error occurred!");
+  //     console.log(error);
+  //   }
+  //   setPending(false);
+  // }
+
+  // useEffect(() => {
+  //   fetchThreads();
+  //   console.log(threads);
+  // }, [])
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
