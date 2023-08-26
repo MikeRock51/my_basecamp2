@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Form, Button } from "react-bootstrap";
+import { Card, Form, Button, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 import axios from "axios";
 
@@ -7,9 +7,9 @@ function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
   const [error, setError] = useState("");
 
-  const handleInputChange = (e) => {
+  function handleInputChange(e) {
     setNewMessage(e.target.value);
-  };
+  }
 
   async function sendMessage() {
     if (newMessage.trim() !== "") {
@@ -19,14 +19,17 @@ function Thread(props) {
         threadId: props.id,
       };
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/v1/messages', newMessageObj);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/v1/messages",
+          newMessageObj
+        );
         props.messages.push(response.data);
-      } catch(error) {
+      } catch (error) {
         setError(error.response?.data?.Error || "Message not sent");
       }
       setNewMessage("");
     }
-  };
+  }
 
   return (
     <Card className="my-3 w-75">
@@ -35,13 +38,14 @@ function Thread(props) {
           <FaCommentAlt className="me-2 text-primary" />
           <h6 className="mb-0">{props.topic}</h6>
         </div>
-        <Button
-          variant="link"
-          className="p-0"
-          onClick={props.deleteThread}
-        >
-          <FaTrash className="text-danger-emphasis" />
-        </Button>
+        <div>
+          <Button variant="link" className="p-0" onClick={props.editThread}>
+            <FaEdit className="text-muted me-2" />
+          </Button>
+          <Button variant="link" className="p-0" onClick={props.deleteThread}>
+            <FaTrash className="text-muted" />
+          </Button>
+        </div>
       </Card.Header>
       <Card.Body className="thread-chat">
         <div className="message-list text-start">
@@ -51,15 +55,16 @@ function Thread(props) {
                 <div className="message-sender text-primary-emphasis">
                   <FaCommentAlt className="me-2" />
                   {message.sender}
-                  
                 </div>
-                <div className="message-actions text-muted ms-auto">
-                  <FaEdit className="me-2 ms-auto" />
-                  <FaTrash />
-                </div>
+                {message.sender === props.user && (
+                  <div className="message-actions text-muted ms-auto">
+                    <FaEdit className="me-2 ms-auto" />
+                    <FaTrash />
+                  </div>
+                )}
               </div>
               <p>{message.message}</p>
-              {error && <p className="text-warning">{error}</p>}
+              {error && <Alert variant="error">{error}</Alert>}
             </div>
           ))}
         </div>

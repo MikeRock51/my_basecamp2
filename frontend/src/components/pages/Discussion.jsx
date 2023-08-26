@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Form, Button, Card, Accordion } from "react-bootstrap";
+import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus } from "react-icons/fa";
 import axios from "axios";
@@ -12,7 +12,7 @@ function Discussion(props) {
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
-  const [currentThread, setCurrentThread] = useState(null);
+  const [currentThread, setCurrentThread] = useState(sessionStorage.currentThread ? JSON.parse(sessionStorage.currentThread) : null);
 
   const {data, err} = useFetch(`/projects/${projectData.id}/threads`);
   useEffect(() => {
@@ -35,16 +35,18 @@ function Discussion(props) {
       const response = await axios.post('http://127.0.0.1:8000/api/v1/threads', newThreadObj);
       setThreads([...threads, response.data]);
       setCurrentThread(response.data);
+      sessionStorage.currentThread = JSON.stringify(response.data);
     } catch(error) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }
     setNewDiscussion("");
   }
-
+  // console.log(current)
   async function deleteThread() {
     try {
       await axios.delete(`http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`);
       setCurrentThread(null);
+      delete sessionStorage.currentThread;
     } catch (error) {
       console.log(error.response?.data?.Error);
     }
@@ -52,6 +54,7 @@ function Discussion(props) {
 
   return (
     <Container className="">
+      {error && <Alert variant="error">{error}</Alert>}
       <h2 className="text-primary">{projectData.name}</h2>
       <p className="mb-4 fst-italic">Created by {projectData.author}</p>
       <Card className="mb-3 text-start w-75">

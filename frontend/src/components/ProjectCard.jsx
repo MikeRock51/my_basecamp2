@@ -22,8 +22,8 @@ function ProjectCard(props) {
             {props.members.join(", ")}
           </p>
         )}
-        {props.admin === true && (
-          <div className="d-flex justify-content-between align-items-center">
+        <div className="d-flex justify-content-between align-items-center">
+          {props.admin === true && (
             <button
               className="btn btn-link"
               onClick={() => {
@@ -34,18 +34,18 @@ function ProjectCard(props) {
             >
               <FaEdit size={20} className="edit-icon" />
             </button>
-            <button
-              className="btn btn-link"
-              onClick={() => {
-                navigate(`/projects/${props.id}/discussion`, {
-                  state: { projectData: props },
-                });
-              }}
-            >
-              <FaComments size={20} className="thread-icon" />
-            </button>
-          </div>
-        )}
+          )}
+          <button
+            className="btn btn-link"
+            onClick={() => {
+              navigate(`/projects/${props.id}/discussion`, {
+                state: { projectData: props },
+              });
+            }}
+          >
+            <FaComments size={20} className="thread-icon" />
+          </button>
+        </div>
       </Card.Body>
     </Card>
   );
