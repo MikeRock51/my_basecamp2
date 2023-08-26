@@ -29,7 +29,6 @@ function Discussion(props) {
   useEffect(() => {
     setThreads(data);
   }, [data]);
-  // console.log(threads);
   err && setError(err);
 
   const handleInputChange = (e) => {

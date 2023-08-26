@@ -62,3 +62,12 @@ code {
     font-size: 1rem;
   }
 }
+
+.message-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.message-list::-webkit-scrollbar {
+  width: 1px;
+}

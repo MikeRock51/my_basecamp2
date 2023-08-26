@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 import axios from "axios";
@@ -10,6 +10,7 @@ function Thread(props) {
   const [error, setError] = useState("");
   const [editedMessageId, setEditedMessageId] = useState(null);
   const [editedMessage, setEditedMessage] = useState("");
+  const messageListRef = useRef(null);
 
   async function handleDeleteMessage(index, messageID) {
     try {
@@ -54,6 +55,7 @@ function Thread(props) {
   }
 
   async function sendMessage() {
+    scrollToBottom();
     if (newMessage.trim() !== "") {
       const newMessageObj = {
         sender: props.user,
@@ -95,6 +97,19 @@ function Thread(props) {
     }
     setIsEditing(false);
   }
+
+  function scrollToBottom() {
+    if (messageListRef.current) {
+      const lastMessage = messageListRef.current.lastElementChild;
+      if (lastMessage) {
+        lastMessage.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [props.messages]);
 
   return (
     <Card className="my-3">
@@ -138,7 +153,7 @@ function Thread(props) {
           )}
         </div>
       </Card.Header>
-      <Card.Body className="thread-chat">
+      <Card.Body className="thread-chat" ref={messageListRef}>
         <div className="message-list text-start">
           {props.messages.map((message, index) => (
             <div key={index}>
