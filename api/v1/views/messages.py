@@ -28,3 +28,15 @@ def createMessage():
     newMessage.save()
 
     return jsonify(newMessage.toDict()), 201
+
+@app_views.route('/messages/<thread_id>/<message_id>', methods=['DELETE'], strict_slashes=False)
+def deleteMessage(thread_id, message_id):
+    """Deletes the message with the thread_id from storage"""
+    thread = storage.get(Thread, thread_id)
+
+    if not thread:
+        abort(404)
+
+    storage.delete(thread)
+
+    return jsonify({}), 200

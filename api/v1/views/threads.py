@@ -75,7 +75,36 @@ def deleteThread(thread_id):
     if not thread:
         abort(404)
 
-    storage.delete(thread)
+    message = storage.get(Message, message_id)
+    if not message:
+        abort(404)
+
+    storage.delete(message)
 
     return jsonify({}), 200
 
+
+@app_views.route('/threads/<thread_id>', methods=['PUT'], strict_slashes=False)
+def updateThread(thread_id):
+    """Updates the topic of a thread"""
+    threadData = request.get_json()
+    if not threadData:
+        return jsonify({"Error": "Not a JSON"}), 400
+
+    if "topic" not in threadData:
+        return jsonify({"Error": "Missing topic"}), 400
+
+    thread = storage.get(Thread, thread_id)
+    if not thread:
+        abort(404)
+
+    thread.topic = threadData['topic']
+
+    messages = []
+    for message in thread.messages:
+        messages.append(message.toDict())
+
+    thread = thread.toDict()
+    thread['messages'] = messages
+
+    return jsonify(thread), 200

@@ -5,6 +5,8 @@ import axios from "axios";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
+  const [editedTopic, setEditedTopic] = useState(props.topic);
+  const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
 
   function handleInputChange(e) {
@@ -28,7 +30,28 @@ function Thread(props) {
         setError(error.response?.data?.Error || "Message not sent");
       }
       setNewMessage("");
+      setError("");
     }
+  }
+
+  async function handleSave() {
+    if (editedTopic.trim() !== "") {
+      const editData = {
+        topic: editedTopic,
+      };
+      try {
+        const response = await axios.put(
+          `http://127.0.0.1:8000/api/v1/threads/${props.id}`,
+          editData
+        );
+        sessionStorage.currentThread = JSON.stringify(response.data);
+      } catch (error) {
+        console.log(error.response?.data?.Error);
+        setError(error.response?.data?.Error);
+      }
+    }
+
+    setIsEditing(false); // Exit edit mode
   }
 
   return (
@@ -36,15 +59,41 @@ function Thread(props) {
       <Card.Header className="bg-primary-subtle d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
           <FaCommentAlt className="me-2 text-primary" />
-          <h6 className="mb-0">{props.topic}</h6>
+          {isEditing ? (
+            <Form.Control
+              type="text"
+              value={editedTopic}
+              onChange={(e) => setEditedTopic(e.target.value)}
+            />
+          ) : (
+            <h6 className="mb-0">{editedTopic}</h6>
+          )}
         </div>
         <div>
-          <Button variant="link" className="p-0" onClick={props.editThread}>
-            <FaEdit className="text-muted me-2" />
-          </Button>
-          <Button variant="link" className="p-0" onClick={props.deleteThread}>
-            <FaTrash className="text-muted" />
-          </Button>
+          {isEditing ? (
+            <Button variant="link" className="p-0" onClick={handleSave}>
+              Save
+            </Button>
+          ) : (
+            <>
+              <Button
+                variant="link"
+                className="p-0"
+                onClick={() => {
+                  setIsEditing(true);
+                }}
+              >
+                <FaEdit className="text-muted me-2" />
+              </Button>
+              <Button
+                variant="link"
+                className="p-0"
+                onClick={props.deleteThread}
+              >
+                <FaTrash className="text-muted" />
+              </Button>
+            </>
+          )}
         </div>
       </Card.Header>
       <Card.Body className="thread-chat">

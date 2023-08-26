@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import {
-  FaComment,
   FaPlus,
   FaUser,
   FaProjectDiagram,
@@ -56,7 +55,7 @@ function Discussion(props) {
     }
     setNewDiscussion("");
   }
-  // console.log(current)
+  
   async function deleteThread() {
     try {
       await axios.delete(
