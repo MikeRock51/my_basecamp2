@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { FaPlus } from "react-icons/fa";
+import {
+  FaComment,
+  FaPlus,
+  FaUser,
+  FaProjectDiagram,
+  FaUsers,
+  FaComments,
+  FaFile,
+} from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
 import useFetch from "../utils/useFetch";
@@ -12,11 +20,15 @@ function Discussion(props) {
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
-  const [currentThread, setCurrentThread] = useState(sessionStorage.currentThread ? JSON.parse(sessionStorage.currentThread) : null);
+  const [currentThread, setCurrentThread] = useState(
+    sessionStorage.currentThread
+      ? JSON.parse(sessionStorage.currentThread)
+      : null
+  );
 
-  const {data, err} = useFetch(`/projects/${projectData.id}/threads`);
+  const { data, err } = useFetch(`/projects/${projectData.id}/threads`);
   useEffect(() => {
-    setThreads(data)
+    setThreads(data);
   }, [data]);
   // console.log(threads);
   err && setError(err);
@@ -27,16 +39,19 @@ function Discussion(props) {
 
   async function createNewDiscussion(e) {
     e.preventDefault();
-    const newThreadObj = { 
+    const newThreadObj = {
       topic: newDiscussion,
       projectId: projectData.id,
     };
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/v1/threads', newThreadObj);
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/threads",
+        newThreadObj
+      );
       setThreads([...threads, response.data]);
       setCurrentThread(response.data);
       sessionStorage.currentThread = JSON.stringify(response.data);
-    } catch(error) {
+    } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }
     setNewDiscussion("");
@@ -44,7 +59,9 @@ function Discussion(props) {
   // console.log(current)
   async function deleteThread() {
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`);
+      await axios.delete(
+        `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
+      );
       setCurrentThread(null);
       delete sessionStorage.currentThread;
     } catch (error) {
@@ -54,48 +71,94 @@ function Discussion(props) {
 
   return (
     <Container className="">
-      {error && <Alert variant="error">{error}</Alert>}
-      <h2 className="text-primary">{projectData.name}</h2>
-      <p className="mb-4 fst-italic">Created by {projectData.author}</p>
-      <Card className="mb-3 text-start w-75">
-        <Card.Body>
-          <h6>{projectData.description}</h6>
-          <p className="mb-0">Members:</p>
-          {projectData.members.map((member) => {
-            return <p className="mb-0 text-secondary fst-italic">{member}</p>;
-          })}
-        </Card.Body>
-      </Card>
-      <Form onSubmit={createNewDiscussion} className="d-flex w-75">
-        <Form.Group
-          controlId="newDiscussion"
-          className="flex-grow-1 me-2 text-start"
-        >
-          <Form.Label>Start New Discussion</Form.Label>
-          <Form.Control
-            as="input"
-            rows={4}
-            value={newDiscussion}
-            onChange={handleInputChange}
-            required
-          />
-        </Form.Group>
-        <Button
-          variant="primary"
-          type="submit"
-          className="d-flex align-items-center mt-auto px-3"
-        >
-          <FaPlus className="me-1" />
-          Start Thread
-        </Button>
-      </Form>{" "}
-      {currentThread && <Thread
-        topic={currentThread.topic}
-        id={currentThread.id}
-        messages={currentThread.messages}
-        user={JSON.parse(sessionStorage.userData).email}
-        deleteThread={deleteThread}
-      />}
+      <div className="w-75">
+        <h2 className="text-dark display-5 lh-1">{projectData.name}</h2>
+        <p className="mb-4 text-secondary fst-italic">
+          <FaUser className="me-2 text-primary" /> {projectData.author}
+        </p>
+        {error && <Alert variant="error">{error}</Alert>}
+      </div>
+      <div className="d-flex">
+        <div className="w-75">
+          <Card className="mb-3 text-start">
+            <Card.Body className="">
+              <h6>{projectData.description}</h6>
+              <p className="mb-0">Members:</p>
+              {projectData.members.map((member) => {
+                return (
+                  <p className="mb-0 text-secondary fst-italic">{member}</p>
+                );
+              })}
+            </Card.Body>
+          </Card>
+          <Form onSubmit={createNewDiscussion} className="d-flex">
+            <Form.Group
+              controlId="newDiscussion"
+              className="flex-grow-1 me-2 text-start"
+            >
+              <Form.Label>Start New Discussion</Form.Label>
+              <Form.Control
+                as="input"
+                rows={4}
+                value={newDiscussion}
+                onChange={handleInputChange}
+                required
+              />
+            </Form.Group>
+            <Button
+              variant="primary"
+              type="submit"
+              className="d-flex align-items-center mt-auto px-3"
+            >
+              <FaPlus className="me-1" />
+              Start Thread
+            </Button>
+          </Form>{" "}
+          {currentThread && (
+            <Thread
+              topic={currentThread.topic}
+              id={currentThread.id}
+              messages={currentThread.messages}
+              user={JSON.parse(sessionStorage.userData).email}
+              deleteThread={deleteThread}
+            />
+          )}
+        </div>
+        <div className="ms-5 ">
+          <Button
+            variant="primary"
+            type="submit"
+            className="mb-2 w-100 active d-flex align-items-center mt-auto px-3"
+          >
+            <FaProjectDiagram className="me-2" />
+            Project
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
+          >
+            <FaUsers className="me-2" />
+            Members
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
+          >
+            <FaComments className="me-2" />
+            Discussions
+          </Button>
+          <Button
+            variant="primary"
+            type="submit"
+            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
+          >
+            <FaFile className="me-2" />
+            Attachments
+          </Button>
+        </div>
+      </div>
     </Container>
   );
 }

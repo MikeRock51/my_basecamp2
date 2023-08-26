@@ -32,7 +32,7 @@ function Thread(props) {
   }
 
   return (
-    <Card className="my-3 w-75">
+    <Card className="my-3">
       <Card.Header className="bg-primary-subtle d-flex justify-content-between align-items-center">
         <div className="d-flex align-items-center">
           <FaCommentAlt className="me-2 text-primary" />
