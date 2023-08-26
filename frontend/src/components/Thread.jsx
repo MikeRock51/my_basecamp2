@@ -8,6 +8,46 @@ function Thread(props) {
   const [editedTopic, setEditedTopic] = useState(props.topic);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
+  const [editedMessageId, setEditedMessageId] = useState(null);
+  const [editedMessage, setEditedMessage] = useState("");
+
+  async function handleDeleteMessage(index, messageID) {
+    try {
+      await axios.delete(
+        `http://127.0.0.1:8000/api/v1/messages/${props.id}/${messageID}`
+      );
+      const currentThread = JSON.parse(sessionStorage.currentThread);
+      currentThread.messages = currentThread.messages.filter((msg, idx) => idx !== index);
+      props.setCurrentThread(currentThread);
+      sessionStorage.currentThread = JSON.stringify(currentThread);
+    } catch (error) {
+      setError(error.response?.data?.Error);
+    }
+  }
+
+  function handleEditMessage(id, message) {
+    setEditedMessageId(id);
+    setEditedMessage(message);
+  }
+
+  async function handleSaveEditedMessage(messageID) {
+    if (editedMessage.trim() !== "") {
+      try {
+        const response = await axios.put(
+          `http://127.0.0.1:8000/api/v1/messages/${props.id}/${messageID}`,
+          { message: editedMessage }
+        );
+        const currentThread = JSON.parse(sessionStorage.currentThread);
+        currentThread.messages[editedMessageId] = response.data;
+        props.setCurrentThread(currentThread);
+        sessionStorage.currentThread = JSON.stringify(currentThread);
+      } catch (error) {
+        setError(error.response?.data?.Error);
+      }
+      setEditedMessageId(null);
+      setEditedMessage("");
+    }
+  }
 
   function handleInputChange(e) {
     setNewMessage(e.target.value);
@@ -25,7 +65,10 @@ function Thread(props) {
           "http://127.0.0.1:8000/api/v1/messages",
           newMessageObj
         );
-        props.messages.push(response.data);
+        const currentThread = JSON.parse(sessionStorage.currentThread);
+        currentThread.messages.push(response.data);
+        props.setCurrentThread(currentThread);
+        sessionStorage.currentThread = JSON.stringify(currentThread);
       } catch (error) {
         setError(error.response?.data?.Error || "Message not sent");
       }
@@ -50,8 +93,7 @@ function Thread(props) {
         setError(error.response?.data?.Error);
       }
     }
-
-    setIsEditing(false); // Exit edit mode
+    setIsEditing(false);
   }
 
   return (
@@ -83,14 +125,14 @@ function Thread(props) {
                   setIsEditing(true);
                 }}
               >
-                <FaEdit className="text-muted me-2" />
+                <FaEdit className="text-primary-emphasis me-2" />
               </Button>
               <Button
                 variant="link"
                 className="p-0"
                 onClick={props.deleteThread}
               >
-                <FaTrash className="text-muted" />
+                <FaTrash className="text-primary-emphasis" />
               </Button>
             </>
           )}
@@ -101,19 +143,47 @@ function Thread(props) {
           {props.messages.map((message, index) => (
             <div key={index}>
               <div className="message-header d-flex">
-                <div className="message-sender text-primary-emphasis">
+                <div className="message-sender text-primary">
                   <FaCommentAlt className="me-2" />
                   {message.sender}
                 </div>
                 {message.sender === props.user && (
-                  <div className="message-actions text-muted ms-auto">
-                    <FaEdit className="me-2 ms-auto" />
-                    <FaTrash />
+                  <div className="message-actions ms-auto">
+                    <Button variant="link" className="p-0 text-muted">
+                      <FaEdit
+                        className="me-2 ms-auto"
+                        onClick={() =>
+                          handleEditMessage(index, message.message)
+                        }
+                      />
+                    </Button>
+                    <Button variant="link" className="p-0 text-muted">
+                      <FaTrash
+                        className="me-2 ms-auto"
+                        onClick={() => handleDeleteMessage(index, message.id)}
+                      />
+                    </Button>
                   </div>
                 )}
               </div>
-              <p>{message.message}</p>
+              {editedMessageId === index ? (
+                <Form.Control
+                  type="text"
+                  value={editedMessage}
+                  onChange={(e) => setEditedMessage(e.target.value)}
+                />
+              ) : (
+                <p>{message.message}</p>
+              )}
               {error && <Alert variant="error">{error}</Alert>}
+              {editedMessageId === index && (
+                <Button
+                  variant="primary"
+                  onClick={() => handleSaveEditedMessage(message.id)}
+                >
+                  Save
+                </Button>
+              )}
             </div>
           ))}
         </div>

@@ -31,12 +31,38 @@ def createMessage():
 
 @app_views.route('/messages/<thread_id>/<message_id>', methods=['DELETE'], strict_slashes=False)
 def deleteMessage(thread_id, message_id):
-    """Deletes the message with the thread_id from storage"""
+    """Deletes the message with the message_id"""
     thread = storage.get(Thread, thread_id)
 
     if not thread:
         abort(404)
 
-    storage.delete(thread)
+    message = storage.get(Message, message_id)
+    if not message:
+        abort(404)
+
+    storage.delete(message)
 
     return jsonify({}), 200
+
+@app_views.route('/messages/<thread_id>/<message_id>', methods=['PUT'], strict_slashes=False)
+def updateMessage(thread_id, message_id):
+    """Updates the message with the message_id"""
+    data = request.get_json()
+    if not data:
+        return jsonify({"Error": "Not a JSON"}), 400
+    if "message" not in data:
+        return jsonify({"Error": "message is missing"}), 400
+    
+    thread = storage.get(Thread, thread_id)
+    if not thread:
+        abort(404)
+
+    message = storage.get(Message, message_id)
+    if not message:
+        abort(404)
+
+    message.message = data['message']
+    message.save()
+
+    return jsonify(message.toDict()), 200

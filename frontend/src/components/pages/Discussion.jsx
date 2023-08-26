@@ -120,6 +120,7 @@ function Discussion(props) {
               messages={currentThread.messages}
               user={JSON.parse(sessionStorage.userData).email}
               deleteThread={deleteThread}
+              setCurrentThread={setCurrentThread}
             />
           )}
         </div>

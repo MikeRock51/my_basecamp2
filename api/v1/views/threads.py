@@ -5,7 +5,8 @@ from api.v1.views import app_views
 from models.thread import Thread
 from models.project import Project
 from flask import jsonify, request, abort
-from models import storage 
+from models import storage
+from models.message import Message
 
 
 @app_views.route('/threads', methods=['POST'], strict_slashes=False)
@@ -75,11 +76,7 @@ def deleteThread(thread_id):
     if not thread:
         abort(404)
 
-    message = storage.get(Message, message_id)
-    if not message:
-        abort(404)
-
-    storage.delete(message)
+    storage.delete(thread)
 
     return jsonify({}), 200
 
@@ -99,6 +96,7 @@ def updateThread(thread_id):
         abort(404)
 
     thread.topic = threadData['topic']
+    thread.save()
 
     messages = []
     for message in thread.messages:
