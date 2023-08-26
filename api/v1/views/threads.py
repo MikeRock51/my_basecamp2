@@ -4,7 +4,7 @@
 from api.v1.views import app_views
 from models.thread import Thread
 from models.project import Project
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from models import storage 
 
 
@@ -56,6 +56,11 @@ def getProjectThreads(projectId):
     threads = []
 
     for thread in project.threads:
-        threads.append(thread.toDict())
+        messages = []
+        for message in thread.messages:
+            messages.append(message.toDict())
+        thread = thread.toDict()
+        thread['messages'] = messages
+        threads.append(thread)
 
     return jsonify(threads), 200

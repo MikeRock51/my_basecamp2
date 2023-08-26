@@ -1,14 +1,9 @@
 import React, { useState } from "react";
-import { Card, Form, Button, Collapse } from "react-bootstrap";
+import { Card, Form, Button } from "react-bootstrap";
+import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 
 function Thread(props) {
-  const [isChatOpen, setIsChatOpen] = useState(true);
   const [newMessage, setNewMessage] = useState("");
-  const [messages, setMessages] = useState([]);
-
-  const handleChatToggle = () => {
-    setIsChatOpen(!isChatOpen);
-  };
 
   const handleInputChange = (e) => {
     setNewMessage(e.target.value);
@@ -16,48 +11,69 @@ function Thread(props) {
 
   const sendMessage = () => {
     if (newMessage.trim() !== "") {
-      setMessages([...messages, newMessage]);
+      const newMessageObj = {
+        sender: "User",
+        message: newMessage,
+      };
+      props.addMessage(newMessageObj);
       setNewMessage("");
     }
   };
 
   return (
-    <Card className="mb-3">
-      <Card.Header>
-        <h5 className="mb-0">Thread Topic</h5>
+    <Card className="my-3 w-75">
+      <Card.Header className="bg-primary-subtle d-flex justify-content-between align-items-center">
+        <div className="d-flex align-items-center">
+          <FaCommentAlt className="me-2 text-primary" />
+          <h6 className="mb-0">{props.topic}</h6>
+        </div>
         <Button
           variant="link"
-          onClick={handleChatToggle}
           className="p-0"
-          aria-expanded={isChatOpen}
+          onClick={() => {
+            
+          }}
         >
-          {isChatOpen ? "Hide Chat" : "Show Chat"}
+          <FaTrash className="text-danger-emphasis" />
         </Button>
       </Card.Header>
-      <Collapse in={isChatOpen}>
-        <Card.Body className="thread-chat">
-          <div className="message-list">
-            {messages.map((message, index) => (
-              <div key={index} className="message">
-                <strong>Sender:</strong> User
-                <p>{message}</p>
+      <Card.Body className="thread-chat">
+        <div className="message-list text-start">
+          {props.messages.map((message, index) => (
+            <div key={index} className={`message ${message.sender === "User" ? "user-message" : ""}`}>
+              <div className="message-header d-flex">
+                <div className="message-sender text-primary-emphasis">
+                  <FaCommentAlt className="me-2" />
+                  {message.sender}
+                  
+                </div>
+                <div className="message-actions text-muted ms-auto">
+                  <FaEdit className="me-2 ms-auto" />
+                  <FaTrash />
+                </div>
               </div>
-            ))}
-          </div>
-          <Form className="d-flex align-items-center message-input" onSubmit={(e) => e.preventDefault()}>
-            <Form.Control
-              type="text"
-              placeholder="Type your message..."
-              value={newMessage}
-              onChange={handleInputChange}
-              className="flex-grow-1 me-2"
-            />
-            <Button variant="primary" onClick={sendMessage}>
-              Send
-            </Button>
-          </Form>
-        </Card.Body>
-      </Collapse>
+              <p>{message.message}</p>
+            </div>
+          ))}
+        </div>
+      </Card.Body>
+      <Card.Footer className="bg-primary-subtle">
+        <Form
+          className="d-flex align-items-center message-input"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <Form.Control
+            type="text"
+            placeholder="Type your message..."
+            value={newMessage}
+            onChange={handleInputChange}
+            className="flex-grow-1 me-2"
+          />
+          <Button variant="primary" onClick={sendMessage}>
+            Send
+          </Button>
+        </Form>
+      </Card.Footer>
     </Card>
   );
 }

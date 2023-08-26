@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """RESTFUL API actions for messages"""
 
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from models import storage
 from models.message import Message
 from models.thread import Thread

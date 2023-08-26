@@ -18,7 +18,7 @@ function Discussion() {
     setThreads(data)
   }, [data]);
   console.log(threads);
-  error && console.log(error);
+  error && console.log(`Error fetching threads: ${error}`);
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
@@ -73,7 +73,11 @@ function Discussion() {
           Start Thread
         </Button>
       </Form>{" "}
-      <Thread />
+      {threads.length > 0 && <Thread
+        topic={threads[0].topic}
+        id={threads[threads.length - 1].id}
+        messages={threads[0].messages}
+      />}
     </Container>
   );
 }
