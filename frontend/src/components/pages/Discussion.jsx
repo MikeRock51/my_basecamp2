@@ -6,35 +6,48 @@ import axios from "axios";
 import Thread from "../Thread";
 import useFetch from "../utils/useFetch";
 
-function Discussion() {
+function Discussion(props) {
   const location = useLocation();
   const [newDiscussion, setNewDiscussion] = useState("");
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
-  // const [error, setError] = useState("");
+  const [error, setError] = useState("");
+  const [currentThread, setCurrentThread] = useState(null);
 
-  const {data, error} = useFetch(`/projects/${projectData.id}/threads`);
+  const {data, err} = useFetch(`/projects/${projectData.id}/threads`);
   useEffect(() => {
     setThreads(data)
   }, [data]);
-  console.log(threads);
-  error && console.log(`Error fetching threads: ${error}`);
+  // console.log(threads);
+  err && setError(err);
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
   };
 
-  function handleSubmit(e) {
+  async function createNewDiscussion(e) {
     e.preventDefault();
+    const newThreadObj = { 
+      topic: newDiscussion,
+      projectId: projectData.id,
+    };
+    try {
+      const response = await axios.post('http://127.0.0.1:8000/api/v1/threads', newThreadObj);
+      setThreads([...threads, response.data]);
+      setCurrentThread(response.data);
+    } catch(error) {
+      setError(error.response?.data?.Error || "Failed to create thread");
+    }
+    setNewDiscussion("");
   }
 
-  function createNewDiscussion(e) {
-    e.preventDefault();
-    // Create a new thread and add it to the threads array
-    const newThread = { content: newDiscussion, replies: [] };
-    setThreads([...threads, newThread]);
-    // Clear the input field
-    setNewDiscussion("");
+  async function deleteThread() {
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`);
+      setCurrentThread(null);
+    } catch (error) {
+      console.log(error.response?.data?.Error);
+    }
   }
 
   return (
@@ -73,10 +86,12 @@ function Discussion() {
           Start Thread
         </Button>
       </Form>{" "}
-      {threads.length > 0 && <Thread
-        topic={threads[0].topic}
-        id={threads[threads.length - 1].id}
-        messages={threads[0].messages}
+      {currentThread && <Thread
+        topic={currentThread.topic}
+        id={currentThread.id}
+        messages={currentThread.messages}
+        user={JSON.parse(sessionStorage.userData).email}
+        deleteThread={deleteThread}
       />}
     </Container>
   );

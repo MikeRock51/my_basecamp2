@@ -26,8 +26,10 @@ def createThread():
 
     thread = Thread(topic=threadData['topic'], projectId=threadData['projectId'])
     thread.save()
+    thread = thread.toDict()
+    thread['messages'] = []
 
-    return jsonify(thread.toDict()), 201
+    return jsonify(thread), 201
 
 @app_views.route('/threads/<threadId>', strict_slashes=False)
 def getThread(threadId):
@@ -64,3 +66,16 @@ def getProjectThreads(projectId):
         threads.append(thread)
 
     return jsonify(threads), 200
+
+@app_views.route('/threads/<thread_id>', methods=['DELETE'], strict_slashes=False)
+def deleteThread(thread_id):
+    """Deletes the thread with the thread_id from storage"""
+    thread = storage.get(Thread, thread_id)
+
+    if not thread:
+        abort(404)
+
+    storage.delete(thread)
+
+    return jsonify({}), 200
+
