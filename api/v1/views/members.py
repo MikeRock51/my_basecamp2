@@ -51,7 +51,7 @@ def deleteMember():
     """Deletes a member from a project"""
     reqData = request.get_json()
     if not reqData:
-        return jsonify({"Error": "Not a JSON"}), 200
+        return jsonify({"Error": "Not a JSON"}), 400
 
     requiredFields = ["projectId", "id"]
     for field in requiredFields:
