@@ -142,6 +142,7 @@ function EditProject() {
               <Switch
                 checked={formData.member.isAdmin}
                 onChange={handleToggleChange}
+                uncheckedIcon={false}
                 onColor="#007bff"
                 onHandleColor="#ffffff"
                 offColor="#d3d3d3"

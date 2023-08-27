@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container, Alert, Form, Button, Card } from "react-bootstrap";
+import { Container, Alert, Button, Card } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
+import Switch from "react-switch";
 import {
   FaEdit,
   FaUser,
@@ -19,6 +20,20 @@ function MembersBoard(props) {
   const location = useLocation();
   const projectData = location.state.projectData;
   const [error, setError] = useState("");
+  const [members, setMembers] = useState([]);
+
+  const { data, err } = useFetch(`/projects/${projectData.id}/members`);
+  useEffect(() => {
+    data && setMembers(data);
+    err && setError(err);
+  }, [data, err]);
+
+  async function toggleAdminStatus(index) {
+    
+    const updatedMembers = [...members];
+    updatedMembers[index].isAdmin = !updatedMembers[index].isAdmin;
+    setMembers(updatedMembers);
+  }
 
   return (
     <Container className="">
@@ -35,25 +50,38 @@ function MembersBoard(props) {
             <Card.Body className="">
               <h6>{projectData.description}</h6>
               <p className="mb-0 text-warning">Members</p>
-              {projectData.members.map((member) => {
+              {members.map((member, index) => {
                 return (
-                  <div className="d-flex text-secondary">
+                  <div className="text-secondary mb-3 bg-primary-subtle rounded p-3" key={member.id}>
+                    <div className="d-flex">
                     <p className="mb-0 fst-italic">
                       <FaUser className="text-primary me-2" />
-                      {member}
+                      {member.email}
                     </p>
                     <Button
                       variant="link"
-                      className="p-0 ms-auto me-2 text-primary-emphasis"
-                    >
-                      <FaEdit className="" />
-                    </Button>
-                    <Button
-                      variant="link"
-                      className="p-0 me-2 text-danger-emphasis"
+                      className="p-0 ms-auto text-danger"
                     >
                       <FaTrash className="" />
                     </Button>
+                    </div>
+                    <div className="me-2">
+                    <label className="me-2 fw-bold">Admin:</label>
+                      <Switch
+                        checked={member.isAdmin}
+                        onChange={() => toggleAdminStatus(index)}
+                        onColor="#86d3ff"
+                        onHandleColor="#2693e6"
+                        handleDiameter={20}
+                        // uncheckedIcon={false}
+                        // checkedIcon={false}
+                        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                        height={20}
+                        width={35}
+                        className="react-switch"
+                      />
+                    </div>
                   </div>
                 );
               })}
