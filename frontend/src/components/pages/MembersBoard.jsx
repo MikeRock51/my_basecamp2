@@ -1,27 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Container, Alert, Button, Card } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Switch from "react-switch";
-import {
-  FaUser,
-  FaProjectDiagram,
-  FaUsers,
-  FaComments,
-  FaFile,
-  FaTrash,
-} from "react-icons/fa";
+import { FaUser, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import useFetch from "../utils/useFetch";
+import SideNav from "../SideNav";
 
 function MembersBoard(props) {
-  const navigate = useNavigate();
   const location = useLocation();
   const projectData = location.state.projectData;
+  const threads = location.state.threads;
   const [error, setError] = useState("");
   const [members, setMembers] = useState([]);
   const isAuthor =
     JSON.parse(sessionStorage.userData).email === projectData.author;
-
 
   const { data, err } = useFetch(`/projects/${projectData.id}/members`);
   useEffect(() => {
@@ -82,83 +75,47 @@ function MembersBoard(props) {
                         <FaUser className="text-primary me-2" />
                         {member.email}
                       </p>
-                      {isAuthor && <Button
-                        variant="link"
-                        className="p-0 ms-auto text-danger"
-                        onClick={() => {
-                          removeMember(member);
-                        }}
-                      >
-                        <FaTrash className="" />
-                      </Button>}
+                      {isAuthor && (
+                        <Button
+                          variant="link"
+                          className="p-0 ms-auto text-danger"
+                          onClick={() => {
+                            removeMember(member);
+                          }}
+                        >
+                          <FaTrash className="" />
+                        </Button>
+                      )}
                     </div>
                     {!isAuthor && member.isAdmin && <p>Admin</p>}
-                    {isAuthor && <div className="me-2 d-flex">
-                      <label className="me-2 fw-bold">Admin:</label>
-                      <div className="mt-1">
-                        <Switch
-                          checked={member.isAdmin}
-                          onChange={() => toggleAdminStatus(index)}
-                          onColor="#86d3ff"
-                          onHandleColor="#2693e6"
-                          handleDiameter={20}
-                          // uncheckedIcon={false}
-                          // checkedIcon={false}
-                          boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-                          activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-                          height={20}
-                          width={35}
-                          className="react-switch"
-                        />
+                    {isAuthor && (
+                      <div className="me-2 d-flex">
+                        <label className="me-2 fw-bold">Admin:</label>
+                        <div className="mt-1">
+                          <Switch
+                            checked={member.isAdmin}
+                            onChange={() => toggleAdminStatus(index)}
+                            onColor="#86d3ff"
+                            onHandleColor="#2693e6"
+                            handleDiameter={20}
+                            // uncheckedIcon={false}
+                            // checkedIcon={false}
+                            boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+                            activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+                            height={20}
+                            width={35}
+                            className="react-switch"
+                          />
+                        </div>
                       </div>
-                    </div>}
+                    )}
                   </div>
                 );
               })}
             </Card.Body>
           </Card>
         </div>
-        <div className="ms-5 ">
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-            onClick={() => {
-              navigate(`/projects/${projectData.id}/discussion`, {
-                state: {
-                  projectData: projectData,
-                },
-              });
-            }}
-          >
-            <FaProjectDiagram className="me-2" />
-            Project
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 active d-flex align-items-center mt-auto px-3"
-          >
-            <FaUsers className="me-2" />
-            Members
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-          >
-            <FaComments className="me-2" />
-            Discussions
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-          >
-            <FaFile className="me-2" />
-            Attachments
-          </Button>
-        </div>
+        <SideNav projectData={projectData} threads={threads} />
       </div>
     </Container>
   );

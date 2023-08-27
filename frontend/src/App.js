@@ -15,6 +15,7 @@ import EditUser from "./components/pages/EditUser";
 import Discussion from "./components/pages/Discussion";
 import MembersBoard from "./components/pages/MembersBoard";
 import NavBar from "./components/NavBar";
+import DiscussionsBoard from "./components/pages/DiscussionsBoard";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/projects/edit/:id" element={<EditProject />} />
           <Route path="/projects/:projectId/discussion" element={<Discussion />} />
           <Route path="/projects/:projectId/members" element={<MembersBoard />} />
+          <Route path="/projects/:projectId/topics" element={<DiscussionsBoard />} />
         </Routes>
       </div>
     </Router>

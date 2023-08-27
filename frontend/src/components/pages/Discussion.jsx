@@ -1,21 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-  FaPlus,
-  FaUser,
-  FaProjectDiagram,
-  FaUsers,
-  FaComments,
-  FaFile,
-} from "react-icons/fa";
+import { useLocation } from "react-router-dom";
+import { FaPlus, FaUser } from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
 import useFetch from "../utils/useFetch";
+import SideNav from "../SideNav";
 
 function Discussion(props) {
   const location = useLocation();
-  const navigate = useNavigate();
   const [newDiscussion, setNewDiscussion] = useState("");
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
@@ -55,7 +48,7 @@ function Discussion(props) {
     }
     setNewDiscussion("");
   }
-  
+
   async function deleteThread() {
     try {
       await axios.delete(
@@ -83,10 +76,13 @@ function Discussion(props) {
             <Card.Body className="">
               <h6>{projectData.description}</h6>
               <p className="mb-0 text-warning">Members</p>
-                {projectData.members.map((member) => {
-                  return (
-                    <p className="mb-0 text-secondary fst-italic"><FaUser className="text-primary me-2" />{member}</p>
-                  );
+              {projectData.members.map((member) => {
+                return (
+                  <p className="mb-0 text-secondary fst-italic">
+                    <FaUser className="text-primary me-2" />
+                    {member}
+                  </p>
+                );
               })}
             </Card.Body>
           </Card>
@@ -124,47 +120,7 @@ function Discussion(props) {
             />
           )}
         </div>
-        <div className="ms-5 ">
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 active d-flex align-items-center mt-auto px-3"
-          >
-            <FaProjectDiagram className="me-2" />
-            Project
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-            onClick={() => {
-              navigate(`/projects/${projectData.id}/members`, {
-              state: {
-                projectData: projectData,
-              }
-            });
-            }}
-          >
-            <FaUsers className="me-2" />
-            Members
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-          >
-            <FaComments className="me-2" />
-            Discussions
-          </Button>
-          <Button
-            variant="primary"
-            type="submit"
-            className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
-          >
-            <FaFile className="me-2" />
-            Attachments
-          </Button>
-        </div>
+        <SideNav projectData={projectData} threads={threads} />
       </div>
     </Container>
   );
