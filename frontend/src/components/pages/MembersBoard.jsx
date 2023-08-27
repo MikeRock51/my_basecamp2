@@ -92,6 +92,7 @@ function MembersBoard(props) {
                         <FaTrash className="" />
                       </Button>}
                     </div>
+                    {!isAuthor && member.isAdmin && <p>Admin</p>}
                     {isAuthor && <div className="me-2 d-flex">
                       <label className="me-2 fw-bold">Admin:</label>
                       <div className="mt-1">

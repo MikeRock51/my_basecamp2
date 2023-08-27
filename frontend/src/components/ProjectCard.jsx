@@ -23,7 +23,7 @@ function ProjectCard(props) {
           </p>
         )}
         <div className="d-flex justify-content-between align-items-center">
-          {props.admin === true && (
+          {props.admin && (
             <button
               className="btn btn-link"
               onClick={() => {

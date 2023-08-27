@@ -95,7 +95,11 @@ function UserDashboard() {
                       members={project.members.map((member) => member.email)}
                       admin={
                         project.creatorId === currentUser.id ||
-                        project.members.map((member) => member.isAdmin)[0]
+                        project.members.some((member) => {
+                          return (
+                            member.email === currentUser.email && member.isAdmin
+                          );
+                        })
                       }
                     />
                   ))}
