@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   FaPlus,
   FaUser,
@@ -15,6 +15,7 @@ import useFetch from "../utils/useFetch";
 
 function Discussion(props) {
   const location = useLocation();
+  const navigate = useNavigate();
   const [newDiscussion, setNewDiscussion] = useState("");
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
@@ -81,11 +82,11 @@ function Discussion(props) {
           <Card className="mb-3 text-start">
             <Card.Body className="">
               <h6>{projectData.description}</h6>
-              <p className="mb-0">Members:</p>
-              {projectData.members.map((member) => {
-                return (
-                  <p className="mb-0 text-secondary fst-italic">{member}</p>
-                );
+              <p className="mb-0 text-warning">Members</p>
+                {projectData.members.map((member) => {
+                  return (
+                    <p className="mb-0 text-secondary fst-italic"><FaUser className="text-primary me-2" />{member}</p>
+                  );
               })}
             </Card.Body>
           </Card>
@@ -136,6 +137,13 @@ function Discussion(props) {
             variant="primary"
             type="submit"
             className="mb-2 w-100 d-flex align-items-center mt-auto px-3"
+            onClick={() => {
+              navigate(`/projects/${projectData.id}/members`, {
+              state: {
+                projectData: projectData,
+              }
+            });
+            }}
           >
             <FaUsers className="me-2" />
             Members

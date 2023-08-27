@@ -13,6 +13,7 @@ import UserDashboard from "./components/pages/UserDashboard";
 import EditProject from "./components/pages/EditProject";
 import EditUser from "./components/pages/EditUser";
 import Discussion from "./components/pages/Discussion";
+import MembersBoard from "./components/pages/MembersBoard";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/users/edit/:id" element={<EditUser />} />
           <Route path="/projects/edit/:id" element={<EditProject />} />
           <Route path="/projects/:projectId/discussion" element={<Discussion />} />
+          <Route path="/projects/:projectId/members" element={<MembersBoard />} />
         </Routes>
       </div>
     </Router>
