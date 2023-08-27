@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container, Alert, Form, Button, Card } from "react-bootstrap";
+import { Container, Alert, Card } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-  FaUser,
-  FaProjectDiagram,
-  FaUsers,
-  FaComments,
-  FaFile,
-} from "react-icons/fa";
+import { FaUser } from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
 import useFetch from "../utils/useFetch";
@@ -17,20 +11,17 @@ function DiscussionsBoard() {
   const location = useLocation();
   const navigate = useNavigate();
   const projectData = location.state.projectData;
-  const threads = location.state.threads;
+  const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
   const user = sessionStorage.userData && JSON.parse(sessionStorage.userData);
 
-  
-  async function deleteThread() {
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/v1/threads/${''}`
-      );
-    } catch (error) {
-      console.log(error.response?.data?.Error);
-    }
-  }
+  const {data, err} = useFetch(`/projects/${projectData.id}/threads`);
+
+  useEffect(() => {
+    data && setThreads(data);
+    err && setError(err);
+  }, [data, err]);
+
 
   return (
     <Container className="">
@@ -55,7 +46,13 @@ function DiscussionsBoard() {
             </Card.Body>
           </Card>
           {threads && threads.map((thread) => {
-            return <Thread key={thread.id} thread={thread} user={user.email} project={projectData}/>
+            return <Thread
+            user={user.email}
+            thread={thread}
+            threads={threads}
+            setThreads={setThreads}
+            project={projectData}
+          />
           })}
         </div>
         <SideNav projectData={projectData} threads={threads} />

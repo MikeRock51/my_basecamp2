@@ -13,11 +13,7 @@ function Discussion(props) {
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
-  const [currentThread, setCurrentThread] = useState(
-    sessionStorage.currentThread
-      ? JSON.parse(sessionStorage.currentThread)
-      : null
-  );
+  const [currentThread, setCurrentThread] = useState();
 
   const { data, err } = useFetch(`/projects/${projectData.id}/threads`);
   useEffect(() => {
@@ -42,7 +38,8 @@ function Discussion(props) {
       );
       setThreads([...threads, response.data]);
       setCurrentThread(response.data);
-      sessionStorage.currentThread = JSON.stringify(response.data);
+      setError("");
+      // sessionStorage.currentThread = JSON.stringify(response.data);
     } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }

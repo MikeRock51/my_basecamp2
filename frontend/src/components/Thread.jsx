@@ -27,11 +27,16 @@ function Thread(props) {
       await axios.delete(
         `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
       );
-      // props.setThreads(props.threads.filter((thread) => thread !== currentThread));
-      props.setCurrentThread(null);
+      console.log(props.threads)
+      const updatedThreads = props.threads && props.threads.filter((thread) => thread !== currentThread);
+      props.setThreads && props.setThreads([...updatedThreads]);
+      console.log(updatedThreads)
+      // props.setCurrentThread(null);
       // delete sessionStorage.currentThread;
+      setError('');
     } catch (error) {
-      console.log(error.response?.data?.Error);
+      setError(error.response?.data?.Error);
+      console.log(error);
     }
   }
 
