@@ -29,14 +29,15 @@ function MembersBoard(props) {
   }, [data, err]);
 
   async function toggleAdminStatus(index) {
-    try {
-        const response = axios.put();
-    } catch(error) {
-        
-    }
     const updatedMembers = [...members];
     updatedMembers[index].isAdmin = !updatedMembers[index].isAdmin;
-    setMembers(updatedMembers);
+    try {
+        await axios.put('http://0.0.0.0:8000/api/v1/members',
+        updatedMembers[index]);
+        setMembers(updatedMembers);
+    } catch(error) {
+        setError(error.response?.data?.Error || "Member update failed!");
+    }
   }
 
   return (
@@ -46,8 +47,8 @@ function MembersBoard(props) {
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}
         </p>
-        {error && <Alert variant="error">{error}</Alert>}
       </div>
+      {error && <Alert variant="danger">{error}</Alert>}
       <div className="d-flex">
         <div className="w-75">
           <Card className="mb-3 text-start">
