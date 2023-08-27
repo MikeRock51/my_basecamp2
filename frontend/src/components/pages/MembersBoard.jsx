@@ -3,7 +3,6 @@ import { Container, Alert, Button, Card } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
 import Switch from "react-switch";
 import {
-  FaEdit,
   FaUser,
   FaProjectDiagram,
   FaUsers,
@@ -12,7 +11,6 @@ import {
   FaTrash,
 } from "react-icons/fa";
 import axios from "axios";
-import Thread from "../Thread";
 import useFetch from "../utils/useFetch";
 
 function MembersBoard(props) {
