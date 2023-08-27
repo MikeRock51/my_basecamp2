@@ -45,3 +45,32 @@ def updateMember():
     member.save()
 
     return jsonify(member.toDict()), 200
+
+@app_views.route('/members', methods=['DELETE'], strict_slashes=False)
+def deleteMember():
+    """Deletes a member from a project"""
+    reqData = request.get_json()
+    if not reqData:
+        return jsonify({"Error": "Not a JSON"}), 200
+
+    requiredFields = ["projectId", "id"]
+    for field in requiredFields:
+        if field not in reqData:
+            return jsonify({"Error": f"{field} is missing"}), 400
+
+    project = storage.get(Project, reqData['projectId'])
+    if not project:
+        abort(404)
+
+    member = storage.get(Member, reqData['id'])
+    if not member:
+        abort(404)
+
+    if member not in project.members:
+        return jsonify({"Error": "Not a member of this project"}), 403
+
+    project.members.remove(member)
+    project.save()
+    storage.delete(member)
+
+    return jsonify({}), 200
