@@ -1,73 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Container, Nav, Navbar, Tab, Row, Col } from "react-bootstrap";
+import { Container, Nav, Tab, Row, Col, Alert } from "react-bootstrap";
 import ProjectCard from "../ProjectCard";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import useFetch from "../utils/useFetch";
 
 function UserDashboard() {
   const [userProjects, setUserProjects] = useState([]);
   const [sharedProjects, setSharedProjects] = useState([]);
   const [allProjects, setAllProjects] = useState([]);
   const currentUser = JSON.parse(sessionStorage.userData);
+  const [error, setError] = useState('');
 
-  async function fetchProjects() {
-    try {
-      const createdByMe = await axios.get(
-        `http://127.0.0.1:8000/api/v1/users/projects/${currentUser.id}`
-      );
-      const sharedWithMe = await axios.get(
-        `http://127.0.0.1:8000/api/v1/users/projects/shared/${currentUser.email}`
-      );
-      setUserProjects(createdByMe.data);
-      setSharedProjects(sharedWithMe.data);
-      setAllProjects([...createdByMe.data, ...sharedWithMe.data]);
-    } catch (err) {
-      console.log("An error occurred while fetching projects");
-    }
-  }
+  // async function fetchProjects() {
+  //   try {
+  //     const createdByMe = await axios.get(
+  //       `http://127.0.0.1:8000/api/v1/users/projects/${currentUser.id}`
+  //     );
+  //     const sharedWithMe = await axios.get(
+  //       `http://127.0.0.1:8000/api/v1/users/projects/shared/${currentUser.email}`
+  //     );
+  //     setUserProjects(createdByMe.data);
+  //     setSharedProjects(sharedWithMe.data);
+  //     setAllProjects([...createdByMe.data, ...sharedWithMe.data]);
+  //   } catch (err) {
+  //     console.log("An error occurred while fetching projects");
+  //   }
+  // }
+  const {data: created, cError} = useFetch(`/users/projects/${currentUser.id}`)
+  const {data: shared, sError} = useFetch(`/users/projects/shared/${currentUser.email}`)
 
-  const navigate = useNavigate();
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    // fetchProjects();
+    cError && setError(cError);
+    sError && setError(sError);
+    created && setUserProjects(created);
+    shared && setSharedProjects(shared);
+    setAllProjects([...created, ...shared])
+  }, [created, shared, cError, sError]);
 
   return (
     <Container fluid>
-      <Navbar className="m-0 p-3" bg="primary-subtle" expand="lg">
-        <Navbar.Brand className="px-4">Project Dashboard</Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbar-nav" />
-        <Navbar.Collapse id="navbar-nav" className="my-1">
-          <Nav className="ml-auto ms-auto pe-4">
-            <Nav.Link
-              onClick={() => {
-                navigate("/projects/new");
-              }}
-            >
-              Add Project
-            </Nav.Link>
-            <Nav.Link
-              onClick={() => {
-                navigate(`/users/edit/${currentUser.id}`, {
-                  state: { userData: currentUser },
-                });
-              }}
-            >
-              Edit Profile
-            </Nav.Link>
-            <Nav.Link
-              onClick={() => {
-                sessionStorage.clear();
-                navigate("/sign-in");
-              }}
-            >
-              Log Out
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-
+      {error && <Alert variant="danger">{error}</Alert>}
       <Tab.Container id="dashboard-tabs" defaultActiveKey="allProjects">
-        <Row className="mt-4">
+        <Row className="">
           <Col md={2}>
             <Nav variant="pills" className="flex-column mb-3">
               <Nav.Item>
@@ -127,8 +101,12 @@ function UserDashboard() {
                       description={project.description}
                       author={project.author}
                       members={project.members.map((member) => member.email)}
-                      admin={project.members.map((member) => member.isAdmin)[0]}
                       id={project.id}
+                      admin={
+                        project.members.some((member) => {
+                          return member.email === currentUser.email && member.isAdmin;
+                        })
+                      }
                     />
                   ))}
               </Tab.Pane>

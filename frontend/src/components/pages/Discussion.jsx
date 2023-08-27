@@ -70,7 +70,7 @@ function Discussion(props) {
 
   return (
     <Container className="">
-      <div className="w-75">
+      <div className="">
         <h2 className="text-dark display-5 lh-1">{projectData.name}</h2>
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}

@@ -14,11 +14,13 @@ import EditProject from "./components/pages/EditProject";
 import EditUser from "./components/pages/EditUser";
 import Discussion from "./components/pages/Discussion";
 import MembersBoard from "./components/pages/MembersBoard";
+import NavBar from "./components/NavBar";
 
 function App() {
   return (
     <Router>
       <div className="App position-relative pb-5 pt-2 px-2">
+        <NavBar/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/sign-up" element={<SignUp />} />
