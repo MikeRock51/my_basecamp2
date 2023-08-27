@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 import axios from "axios";
+import useFetch from "./utils/useFetch";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
@@ -11,18 +12,38 @@ function Thread(props) {
   const [editedMessageId, setEditedMessageId] = useState(null);
   const [editedMessage, setEditedMessage] = useState("");
   const messageListRef = useRef(null);
+  const currentUser = sessionStorage.userData && JSON.parse(sessionStorage.userData);
+  const [currentThread, setCurrentThread] = useState(null);
+
+  const {data, err} = useFetch(`/threads/${props.thread.id}`);
+
+  useEffect(() => {
+    data && setCurrentThread(data);
+    err && setError(err);
+  }, [data, err]);
+
+  async function deleteThread() {
+    try {
+      await axios.delete(
+        `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
+      );
+      // props.setThreads(props.threads.filter((thread) => thread !== currentThread));
+      props.setCurrentThread(null);
+      // delete sessionStorage.currentThread;
+    } catch (error) {
+      console.log(error.response?.data?.Error);
+    }
+  }
 
   async function handleDeleteMessage(index, messageID) {
     try {
       await axios.delete(
         `http://127.0.0.1:8000/api/v1/messages/${props.thread.id}/${messageID}`
       );
-      const currentThread = JSON.parse(sessionStorage.currentThread);
-      currentThread.messages = currentThread.messages.filter(
+      const updatedMessages = currentThread.messages.filter(
         (msg, idx) => idx !== index
       );
-      props.setCurrentThread(currentThread);
-      sessionStorage.currentThread = JSON.stringify(currentThread);
+      setCurrentThread({...currentThread, messages: updatedMessages});
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -41,10 +62,9 @@ function Thread(props) {
           `http://127.0.0.1:8000/api/v1/messages/${props.thread.id}/${messageID}`,
           { message: editedMessage }
         );
-        const currentThread = JSON.parse(sessionStorage.currentThread);
-        currentThread.messages[editedMessageId] = response.data;
-        props.setCurrentThread(currentThread);
-        sessionStorage.currentThread = JSON.stringify(currentThread);
+        const updatedThread = currentThread;
+        updatedThread.messages[editedMessageId] = response.data;
+        setCurrentThread(updatedThread);
         setError('');
       } catch (error) {
         setError(error.response?.data?.Error);
@@ -71,13 +91,10 @@ function Thread(props) {
           "http://127.0.0.1:8000/api/v1/messages",
           newMessageObj
         );
-        const currentThread = JSON.parse(sessionStorage.currentThread);
         currentThread.messages.push(response.data);
-        props.setCurrentThread(currentThread);
-        sessionStorage.currentThread = JSON.stringify(currentThread);
         setError("");
       } catch (error) {
-        console.log(error.response?.data?.Error);
+        console.log(error);
         setError(error.response?.data?.Error || "Message not sent");
       }
       setNewMessage("");
@@ -85,7 +102,6 @@ function Thread(props) {
   }
 
   async function handleSave() {
-    console.log(editedTopic);
     if (editedTopic.trim() !== "") {
       const editData = {
         topic: editedTopic,
@@ -113,9 +129,12 @@ function Thread(props) {
     }
   }
 
+  // console.log(currentUser.id)
+  // console.log(props.project.creatorId);
+
   useEffect(() => {
     scrollToBottom();
-  }, [props.messages]);
+  }, [props.thread.messages]);
 
   return (
     <div className="mt-4">
@@ -140,7 +159,7 @@ function Thread(props) {
               <Button variant="link" className="p-0" onClick={handleSave}>
                 Save
               </Button>
-            ) : (
+            ) : currentUser.email === props.project.author && (
               <>
                 <Button
                   variant="link"
@@ -154,7 +173,7 @@ function Thread(props) {
                 <Button
                   variant="link"
                   className="p-0"
-                  onClick={props.deleteThread}
+                  onClick={deleteThread}
                 >
                   <FaTrash className="text-primary-emphasis" />
                 </Button>
@@ -164,7 +183,7 @@ function Thread(props) {
         </Card.Header>
         <Card.Body className="thread-chat" ref={messageListRef}>
           <div className="message-list text-start">
-            {props.thread.messages.map((message, index) => (
+            {currentThread && currentThread.messages && currentThread.messages.map((message, index) => (
               <div key={message.id}>
                 <div className="message-header d-flex">
                   <div className="message-sender text-primary">

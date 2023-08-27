@@ -49,18 +49,6 @@ function Discussion(props) {
     setNewDiscussion("");
   }
 
-  async function deleteThread() {
-    try {
-      await axios.delete(
-        `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
-      );
-      setCurrentThread(null);
-      delete sessionStorage.currentThread;
-    } catch (error) {
-      console.log(error.response?.data?.Error);
-    }
-  }
-
   return (
     <Container className="">
       <div className="">
@@ -112,9 +100,9 @@ function Discussion(props) {
           {currentThread && (
             <Thread
               user={JSON.parse(sessionStorage.userData).email}
-              deleteThread={deleteThread}
               thread={currentThread}
               setCurrentThread={setCurrentThread}
+              project={projectData}
             />
           )}
         </div>

@@ -19,7 +19,7 @@ function DiscussionsBoard() {
   const projectData = location.state.projectData;
   const threads = location.state.threads;
   const [error, setError] = useState("");
-  
+  const user = sessionStorage.userData && JSON.parse(sessionStorage.userData);
 
   
   async function deleteThread() {
@@ -55,7 +55,7 @@ function DiscussionsBoard() {
             </Card.Body>
           </Card>
           {threads && threads.map((thread) => {
-            return <Thread />
+            return <Thread key={thread.id} thread={thread} user={user.email} project={projectData}/>
           })}
         </div>
         <SideNav projectData={projectData} threads={threads} />
