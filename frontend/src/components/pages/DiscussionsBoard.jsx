@@ -54,6 +54,9 @@ function DiscussionsBoard() {
               })}
             </Card.Body>
           </Card>
+          {threads && threads.map((thread) => {
+            return <Thread />
+          })}
         </div>
         <SideNav projectData={projectData} threads={threads} />
       </div>

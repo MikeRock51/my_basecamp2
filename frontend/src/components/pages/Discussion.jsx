@@ -68,7 +68,7 @@ function Discussion(props) {
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}
         </p>
-        {error && <Alert variant="error">{error}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
       </div>
       <div className="d-flex">
         <div className="w-75">
@@ -76,10 +76,10 @@ function Discussion(props) {
             <Card.Body className="">
               <h6>{projectData.description}</h6>
               <p className="mb-0 text-warning">Members</p>
-              {projectData.members.map((member) => {
+              {projectData.members.map((member, index) => {
                 return (
-                  <p className="mb-0 text-secondary fst-italic">
-                    <FaUser className="text-primary me-2" />
+                  <p className="mb-0 text-secondary fst-italic" key={index}>
+                    <FaUser className="text-primary me-2"/>
                     {member}
                   </p>
                 );
@@ -111,11 +111,9 @@ function Discussion(props) {
           </Form>{" "}
           {currentThread && (
             <Thread
-              topic={currentThread.topic}
-              id={currentThread.id}
-              messages={currentThread.messages}
               user={JSON.parse(sessionStorage.userData).email}
               deleteThread={deleteThread}
+              thread={currentThread}
               setCurrentThread={setCurrentThread}
             />
           )}

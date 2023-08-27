@@ -63,7 +63,7 @@ function MembersBoard(props) {
           <Card className="mb-3 text-start">
             <Card.Body className="">
               <h6>{projectData.description}</h6>
-              <p className="mb-0 text-warning">Members</p>
+              <p className="mb-1 text-warning">Members</p>
               {members.map((member, index) => {
                 return (
                   <div
@@ -103,7 +103,7 @@ function MembersBoard(props) {
                             boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
                             activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
                             height={20}
-                            width={35}
+                            width={38}
                             className="react-switch"
                           />
                         </div>
