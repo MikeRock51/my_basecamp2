@@ -29,7 +29,11 @@ function MembersBoard(props) {
   }, [data, err]);
 
   async function toggleAdminStatus(index) {
-    
+    try {
+        const response = axios.put();
+    } catch(error) {
+        
+    }
     const updatedMembers = [...members];
     updatedMembers[index].isAdmin = !updatedMembers[index].isAdmin;
     setMembers(updatedMembers);
