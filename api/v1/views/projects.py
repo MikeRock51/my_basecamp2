@@ -53,6 +53,9 @@ def updateProject(project_id):
         member = storage.getByEmail(projectData['member']['email'])
         if not member:
             return jsonify({"Error": "No user with this email"}), 404
+        for pMember in project.members:
+            if member.email == pMember.email:
+                return jsonify({"Error": "Member already exists for this project"}), 403
         newMember = Member(**projectData['member'])
         project.members.append(newMember)
 
