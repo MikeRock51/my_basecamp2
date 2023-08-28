@@ -40,7 +40,6 @@ function Thread(props) {
       );
       sessionStorage.currentThread = null;
       props.setRender(!props.render);
-      // console.log(sessionStorage.currentThread)
       setCurrentThread(null);
       setError('');
     } catch (error) {
@@ -54,12 +53,13 @@ function Thread(props) {
       await axios.delete(
         `http://127.0.0.1:8000/api/v1/messages/${currentThread.id}/${messageID}`
       );
+      const updatedMessages = currentThread.messages.filter(
+        (msg, idx) => idx !== index
+      );
+      const updatedThread = ({...currentThread, messages: updatedMessages});
+      sessionStorage.currentThread = JSON.stringify(updatedThread);
+      setCurrentThread(updatedThread);
       props.setRender(!props.render);
-      // const updatedMessages = currentThread.messages.filter(
-      //   (msg, idx) => idx !== index
-      // );
-      // props.setCurrentThread({...currentThread, messages: updatedMessages});
-      // sessionStorage.currentThread = JSON.stringify(currentThread);
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -83,6 +83,7 @@ function Thread(props) {
         updatedThread.messages[editedMessageId] = response.data;
         props.setCurrentThread(updatedThread);
         sessionStorage.currentThread = JSON.stringify(updatedThread);
+        props.setRender(!props.render);
         setError('');
       } catch (error) {
         setError(error.response?.data?.Error);
