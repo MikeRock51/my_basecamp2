@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus, FaUser } from "react-icons/fa";
@@ -14,6 +14,12 @@ function Discussion(props) {
   const [currentThread, setCurrentThread] = useState(
     sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
   );
+  const [render, setRender] = useState(false);
+  
+
+  useEffect(() => {
+    setCurrentThread(sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread))
+  }, [render]);
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
@@ -31,7 +37,6 @@ function Discussion(props) {
         newThreadObj
       );
       setCurrentThread(response.data);
-      sessionStorage.currentThread = JSON.stringify(response.data);
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
@@ -93,6 +98,8 @@ function Discussion(props) {
               thread={currentThread}
               setCurrentThread={setCurrentThread}
               project={projectData}
+              render={render}
+              setRender={setRender}
             />
           )}
         </div>

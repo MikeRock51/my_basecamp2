@@ -12,6 +12,7 @@ function DiscussionsBoard() {
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
   const user = sessionStorage.userData && JSON.parse(sessionStorage.userData);
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
@@ -27,20 +28,18 @@ function DiscussionsBoard() {
       }
     }
     fetchData();
-  }, [projectData]);
+  }, [render]);
 
-  function setCurrentThread(updatedThread) {
-    const threadIndex = threads.findIndex(
-      (thread) => thread.id === updatedThread.id
-    );
+  // function setCurrentThread(updatedThread) {
+  //   const threadIndex = threads.findIndex(
+  //     (thread) => thread.id === updatedThread.id
+  //   );
 
-    console.log("HERERE")
+  //   const updatedThreads = [...threads];
+  //   updatedThreads[threadIndex] = updatedThread;
 
-    const updatedThreads = [...threads];
-    updatedThreads[threadIndex] = updatedThread;
-
-    setThreads(updatedThreads);
-  }
+  //   setThreads(updatedThreads);
+  // }
 
   return (
     <Container className="">
@@ -77,7 +76,9 @@ function DiscussionsBoard() {
                   threads={threads}
                   setThreads={setThreads}
                   project={projectData}
-                  setCurrentThread={setCurrentThread}
+                  render={render}
+                  setRender={setRender}
+                  // setCurrentThread={setCurrentThread}
                 />
               );
             })}
