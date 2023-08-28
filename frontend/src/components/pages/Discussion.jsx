@@ -1,33 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus, FaUser } from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
-import useFetch from "../utils/useFetch";
 import SideNav from "../SideNav";
 
 function Discussion(props) {
   const location = useLocation();
   const [newDiscussion, setNewDiscussion] = useState("");
   const projectData = location.state.projectData;
-  const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
-  const [currentThread, setCurrentThread] = useState(null);
-
-  // const { data, err } = useFetch(`/projects/${projectData.id}/threads`);
-  // useEffect(() => {
-  //   setThreads(data);
-  //   err && setError(err);
-  //   // sessionStorage.currentThread &&
-  //   //   setCurrentThread(JSON.parse(sessionStorage.currentThread));
-  // }, [data, err, threads]);
-
-  // useEffect(() => {
-  //     sessionStorage.currentThread &&
-  //     setCurrentThread(JSON.parse(sessionStorage.currentThread));
-  // }, [currentThread]);
-
+  const [currentThread, setCurrentThread] = useState(
+    sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
+  );
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
@@ -45,13 +31,11 @@ function Discussion(props) {
         newThreadObj
       );
       setCurrentThread(response.data);
-      setThreads([...threads, response.data]);
-      // sessionStorage.currentThread = JSON.stringify(response.data);
+      sessionStorage.currentThread = JSON.stringify(response.data);
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }
-    // console.log(JSON.parse(sessionStorage.currentThread))
     setNewDiscussion("");
   }
 
@@ -108,13 +92,11 @@ function Discussion(props) {
               user={JSON.parse(sessionStorage.userData).email}
               thread={currentThread}
               setCurrentThread={setCurrentThread}
-              threads={threads}
-              setThreads={setThreads}
               project={projectData}
             />
           )}
         </div>
-        <SideNav projectData={projectData} threads={threads} />
+        <SideNav projectData={projectData} />
       </div>
     </Container>
   );

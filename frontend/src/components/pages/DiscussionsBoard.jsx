@@ -38,15 +38,16 @@ function DiscussionsBoard() {
             <Card.Body className="">
               <h6>{projectData.description}</h6>
               <p className="mb-0 text-warning">Members</p>
-                {projectData.members.map((member) => {
+                {projectData.members.map((member, index) => {
                   return (
-                    <p className="mb-0 text-secondary fst-italic"><FaUser className="text-primary me-2" />{member}</p>
+                    <p key={index} className="mb-0 text-secondary fst-italic"><FaUser className="text-primary me-2" />{member}</p>
                   );
               })}
             </Card.Body>
           </Card>
           {threads && threads.map((thread) => {
             return <Thread
+            key={thread.id}
             user={user.email}
             thread={thread}
             threads={threads}

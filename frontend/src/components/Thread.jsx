@@ -31,9 +31,8 @@ function Thread(props) {
       );
       const updatedThreads = props.threads && props.threads.filter((thread) => thread.id !== props.thread.id);
       props.setThreads && props.setThreads([...updatedThreads]);
-      // console.log(updatedThreads)
       props.setCurrentThread && props.setCurrentThread(null);
-      // delete sessionStorage.currentThread;
+      delete sessionStorage.currentThread;
       setError('');
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -50,6 +49,7 @@ function Thread(props) {
         (msg, idx) => idx !== index
       );
       props.setCurrentThread({...props.thread, messages: updatedMessages});
+      sessionStorage.currentThread = JSON.stringify(props.thread);
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -71,7 +71,7 @@ function Thread(props) {
         const updatedThread = props.thread;
         updatedThread.messages[editedMessageId] = response.data;
         props.setCurrentThread(updatedThread);
-        // sessionStorage.currentThread = JSON.stringify(updatedThread);
+        sessionStorage.currentThread = JSON.stringify(updatedThread);
         setError('');
       } catch (error) {
         setError(error.response?.data?.Error);
@@ -99,6 +99,7 @@ function Thread(props) {
           newMessageObj
         );
         props.thread.messages.push(response.data);
+        sessionStorage.currentThread = JSON.stringify(props.thread);
         setError("");
       } catch (error) {
         console.log(error);
@@ -118,7 +119,7 @@ function Thread(props) {
           `http://127.0.0.1:8000/api/v1/threads/${props.thread.id}`,
           editData
         );
-        // sessionStorage.currentThread = JSON.stringify(response.data);
+        sessionStorage.currentThread = JSON.stringify(response.data);
         props.setCurrentThread(response.data);
       } catch (error) {
         console.log(error.response?.data?.Error);
@@ -136,9 +137,6 @@ function Thread(props) {
       }
     }
   }
-
-  // console.log(currentUser.id)
-  // console.log(props.project.creatorId);
 
   useEffect(() => {
     scrollToBottom();
@@ -192,7 +190,7 @@ function Thread(props) {
         </Card.Header>
         <Card.Body className="thread-chat" ref={messageListRef}>
           <div className="message-list text-start">
-            {props.thread && props.thread.messages && props.thread.messages.map((message, index) => (
+            {props.thread && props.thread.messages.map((message, index) => (
               <div key={message.id}>
                 <div className="message-header d-flex">
                   <div className="message-sender text-primary">
