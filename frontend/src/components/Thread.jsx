@@ -6,7 +6,7 @@ import useFetch from "./utils/useFetch";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
-  const [editedTopic, setEditedTopic] = useState(props.thread.topic);
+  const [editedTopic, setEditedTopic] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState("");
   const [editedMessageId, setEditedMessageId] = useState(null);
@@ -33,7 +33,7 @@ function Thread(props) {
       props.setThreads && props.setThreads([...updatedThreads]);
       // console.log(updatedThreads)
       props.setCurrentThread && props.setCurrentThread(null);
-      delete sessionStorage.currentThread;
+      // delete sessionStorage.currentThread;
       setError('');
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -71,7 +71,7 @@ function Thread(props) {
         const updatedThread = props.thread;
         updatedThread.messages[editedMessageId] = response.data;
         props.setCurrentThread(updatedThread);
-        sessionStorage.currentThread = JSON.stringify(updatedThread);
+        // sessionStorage.currentThread = JSON.stringify(updatedThread);
         setError('');
       } catch (error) {
         setError(error.response?.data?.Error);
@@ -108,7 +108,7 @@ function Thread(props) {
     }
   }
 
-  async function handleSave() {
+  async function handleEditTopic() {
     if (editedTopic.trim() !== "") {
       const editData = {
         topic: editedTopic,
@@ -118,7 +118,8 @@ function Thread(props) {
           `http://127.0.0.1:8000/api/v1/threads/${props.thread.id}`,
           editData
         );
-        sessionStorage.currentThread = JSON.stringify(response.data);
+        // sessionStorage.currentThread = JSON.stringify(response.data);
+        props.setCurrentThread(response.data);
       } catch (error) {
         console.log(error.response?.data?.Error);
         setError(error.response?.data?.Error);
@@ -158,12 +159,12 @@ function Thread(props) {
                 onChange={(e) => setEditedTopic(e.target.value)}
               />
             ) : (
-              <h6 className="mb-0">{editedTopic}</h6>
+              <h6 className="mb-0">{props.thread.topic}</h6>
             )}
           </div>
           <div>
             {isEditing ? (
-              <Button variant="link" className="p-0" onClick={handleSave}>
+              <Button variant="link" className="p-0" onClick={handleEditTopic}>
                 Save
               </Button>
             ) : currentUser.email === props.project.author && (
@@ -172,6 +173,7 @@ function Thread(props) {
                   variant="link"
                   className="p-0"
                   onClick={() => {
+                    setEditedTopic(props.thread.topic);
                     setIsEditing(true);
                   }}
                 >
