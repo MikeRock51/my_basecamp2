@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 import axios from "axios";
-import useFetch from "./utils/useFetch";
+// import useFetch from "./utils/useFetch";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
@@ -120,10 +120,15 @@ function Thread(props) {
           editData
         );
         sessionStorage.currentThread = JSON.stringify(response.data);
-        props.setCurrentThread(response.data);
+        props.setCurrentThread && props.setCurrentThread(response.data);
+        if (props.setThreads) {
+          const updatedThreads = props.threads.filter((thread) => thread.id !== props.thread.id)
+          props.setThreads([...updatedThreads, response.data]);
+        }
+        setError('');
       } catch (error) {
-        console.log(error.response?.data?.Error);
-        setError(error.response?.data?.Error);
+        console.log(error);
+        setError(error.response?.data?.Error || "Please try again");
       }
     }
     setIsEditing(false);

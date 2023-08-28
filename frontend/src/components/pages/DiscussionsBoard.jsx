@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { Container, Alert, Card } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import axios from "axios";
-import Thread from "../Thread";
-import useFetch from "../utils/useFetch";
+import Thread from "../Thread"
 import SideNav from "../SideNav";
 
 function DiscussionsBoard() {
   const location = useLocation();
-  const navigate = useNavigate();
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
   const user = sessionStorage.userData && JSON.parse(sessionStorage.userData);
 
-  const {data, err} = useFetch(`/projects/${projectData.id}/threads`);
-
   useEffect(() => {
-    data && setThreads(data);
-    err && setError(err);
-  }, [data, err]);
+    async function fetchData() {
+      try {
+        const response = await axios.get(`http://0.0.0.0:8000/api/v1/projects/${projectData.id}/threads`);
+        setThreads([...response.data]);
+        setError("");
+      } catch (error) {
+        console.log(error);
+        setError(error.response?.data?.Error || "An error occurred");
+      }
+    }
+    fetchData();
+  }, [projectData]);
 
 
   return (
@@ -30,7 +35,7 @@ function DiscussionsBoard() {
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}
         </p>
-        {error && <Alert variant="error">{error}</Alert>}
+        {error && <Alert variant="danger">{error}</Alert>}
       </div>
       <div className="d-flex">
         <div className="w-75">
