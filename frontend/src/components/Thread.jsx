@@ -131,11 +131,8 @@ function Thread(props) {
           editData
         );
         sessionStorage.currentThread = JSON.stringify(response.data);
-        props.setCurrentThread && props.setCurrentThread(response.data);
-        if (props.setThreads) {
-          const updatedThreads = props.threads.filter((thread) => thread.id !== currentThread.id)
-          props.setThreads([...updatedThreads, response.data]);
-        }
+        setCurrentThread(response.data);
+        props.setRender(!props.render);
         setError('');
       } catch (error) {
         console.log(error);
