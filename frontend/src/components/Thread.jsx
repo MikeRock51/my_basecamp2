@@ -81,7 +81,6 @@ function Thread(props) {
         );
         const updatedThread = currentThread;
         updatedThread.messages[editedMessageId] = response.data;
-        props.setCurrentThread(updatedThread);
         sessionStorage.currentThread = JSON.stringify(updatedThread);
         props.setRender(!props.render);
         setError('');
