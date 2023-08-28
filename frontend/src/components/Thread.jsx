@@ -13,9 +13,9 @@ function Thread(props) {
   const [editedMessage, setEditedMessage] = useState("");
   const messageListRef = useRef(null);
   const currentUser = sessionStorage.userData && JSON.parse(sessionStorage.userData);
-  // const [currentThread, setCurrentThread] = useState(
-  //   sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
-  // );
+  const [currentThread, setCurrentThread] = useState(
+    sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
+  );
 
   // const {data, err} = useFetch(`/threads/${props.thread.id}`);
 
@@ -33,10 +33,11 @@ function Thread(props) {
       props.setThreads && props.setThreads([...updatedThreads]);
       props.setCurrentThread && props.setCurrentThread(null);
       delete sessionStorage.currentThread;
+      console.log(sessionStorage.currentThread)
       setError('');
     } catch (error) {
-      setError(error.response?.data?.Error);
-      console.log(error);
+        setError(error.response?.data?.Error);
+        console.log(error);
     }
   }
 
@@ -54,6 +55,7 @@ function Thread(props) {
     } catch (error) {
       setError(error.response?.data?.Error);
     }
+    setError("");
   }
 
   function handleEditMessage(id, message) {
@@ -252,6 +254,9 @@ function Thread(props) {
               placeholder="Type your message..."
               value={newMessage}
               onChange={handleInputChange}
+              onKeyDown={(e) => {
+                e.key === "Enter" && sendMessage();
+              }}
               className="flex-grow-1 me-2"
             />
             <Button variant="primary" onClick={sendMessage}>

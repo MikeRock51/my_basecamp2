@@ -3,7 +3,7 @@ import { Container, Alert, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import axios from "axios";
-import Thread from "../Thread"
+import Thread from "../Thread";
 import SideNav from "../SideNav";
 
 function DiscussionsBoard() {
@@ -16,7 +16,9 @@ function DiscussionsBoard() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await axios.get(`http://0.0.0.0:8000/api/v1/projects/${projectData.id}/threads`);
+        const response = await axios.get(
+          `http://0.0.0.0:8000/api/v1/projects/${projectData.id}/threads`
+        );
         setThreads([...response.data]);
         setError("");
       } catch (error) {
@@ -27,6 +29,18 @@ function DiscussionsBoard() {
     fetchData();
   }, [projectData]);
 
+  function setCurrentThread(updatedThread) {
+    const threadIndex = threads.findIndex(
+      (thread) => thread.id === updatedThread.id
+    );
+
+    console.log("HERERE")
+
+    const updatedThreads = [...threads];
+    updatedThreads[threadIndex] = updatedThread;
+
+    setThreads(updatedThreads);
+  }
 
   return (
     <Container className="">
@@ -43,23 +57,30 @@ function DiscussionsBoard() {
             <Card.Body className="">
               <h6>{projectData.description}</h6>
               <p className="mb-0 text-warning">Members</p>
-                {projectData.members.map((member, index) => {
-                  return (
-                    <p key={index} className="mb-0 text-secondary fst-italic"><FaUser className="text-primary me-2" />{member}</p>
-                  );
+              {projectData.members.map((member, index) => {
+                return (
+                  <p key={index} className="mb-0 text-secondary fst-italic">
+                    <FaUser className="text-primary me-2" />
+                    {member}
+                  </p>
+                );
               })}
             </Card.Body>
           </Card>
-          {threads && threads.map((thread) => {
-            return <Thread
-            key={thread.id}
-            user={user.email}
-            thread={thread}
-            threads={threads}
-            setThreads={setThreads}
-            project={projectData}
-          />
-          })}
+          {threads &&
+            threads.map((thread) => {
+              return (
+                <Thread
+                  key={thread.id}
+                  user={user.email}
+                  thread={thread}
+                  threads={threads}
+                  setThreads={setThreads}
+                  project={projectData}
+                  setCurrentThread={setCurrentThread}
+                />
+              );
+            })}
         </div>
         <SideNav projectData={projectData} threads={threads} />
       </div>
