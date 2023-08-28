@@ -13,26 +13,27 @@ function Thread(props) {
   const [editedMessage, setEditedMessage] = useState("");
   const messageListRef = useRef(null);
   const currentUser = sessionStorage.userData && JSON.parse(sessionStorage.userData);
-  const [currentThread, setCurrentThread] = useState(null);
+  // const [currentThread, setCurrentThread] = useState(
+  //   sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
+  // );
 
-  const {data, err} = useFetch(`/threads/${props.thread.id}`);
+  // const {data, err} = useFetch(`/threads/${props.thread.id}`);
 
-  useEffect(() => {
-    data && setCurrentThread(data);
-    err && setError(err);
-  }, [data, err]);
+  // useEffect(() => {
+  //   data && setCurrentThread(data);
+  //   err && setError(err);
+  // }, [data, err]);
 
   async function deleteThread() {
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
+        `http://127.0.0.1:8000/api/v1/threads/${props.thread.id}`
       );
-      console.log(props.threads)
-      const updatedThreads = props.threads && props.threads.filter((thread) => thread !== currentThread);
+      const updatedThreads = props.threads && props.threads.filter((thread) => thread.id !== props.thread.id);
       props.setThreads && props.setThreads([...updatedThreads]);
-      console.log(updatedThreads)
-      // props.setCurrentThread(null);
-      // delete sessionStorage.currentThread;
+      // console.log(updatedThreads)
+      props.setCurrentThread && props.setCurrentThread(null);
+      delete sessionStorage.currentThread;
       setError('');
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -45,10 +46,10 @@ function Thread(props) {
       await axios.delete(
         `http://127.0.0.1:8000/api/v1/messages/${props.thread.id}/${messageID}`
       );
-      const updatedMessages = currentThread.messages.filter(
+      const updatedMessages = props.thread.messages.filter(
         (msg, idx) => idx !== index
       );
-      setCurrentThread({...currentThread, messages: updatedMessages});
+      props.setCurrentThread({...props.thread, messages: updatedMessages});
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error);
@@ -67,9 +68,10 @@ function Thread(props) {
           `http://127.0.0.1:8000/api/v1/messages/${props.thread.id}/${messageID}`,
           { message: editedMessage }
         );
-        const updatedThread = currentThread;
+        const updatedThread = props.thread;
         updatedThread.messages[editedMessageId] = response.data;
-        setCurrentThread(updatedThread);
+        props.setCurrentThread(updatedThread);
+        sessionStorage.currentThread = JSON.stringify(updatedThread);
         setError('');
       } catch (error) {
         setError(error.response?.data?.Error);
@@ -96,7 +98,7 @@ function Thread(props) {
           "http://127.0.0.1:8000/api/v1/messages",
           newMessageObj
         );
-        currentThread.messages.push(response.data);
+        props.thread.messages.push(response.data);
         setError("");
       } catch (error) {
         console.log(error);
@@ -188,7 +190,7 @@ function Thread(props) {
         </Card.Header>
         <Card.Body className="thread-chat" ref={messageListRef}>
           <div className="message-list text-start">
-            {currentThread && currentThread.messages && currentThread.messages.map((message, index) => (
+            {props.thread && props.thread.messages && props.thread.messages.map((message, index) => (
               <div key={message.id}>
                 <div className="message-header d-flex">
                   <div className="message-sender text-primary">

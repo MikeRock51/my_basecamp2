@@ -13,13 +13,19 @@ function Discussion(props) {
   const projectData = location.state.projectData;
   const [threads, setThreads] = useState([]);
   const [error, setError] = useState("");
-  const [currentThread, setCurrentThread] = useState();
+  const [currentThread, setCurrentThread] = useState(
+    null
+    // sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
+  );
 
   const { data, err } = useFetch(`/projects/${projectData.id}/threads`);
   useEffect(() => {
     setThreads(data);
-  }, [data]);
-  err && setError(err);
+    err && setError(err);
+    // sessionStorage.currentThread &&
+    //   setCurrentThread(JSON.parse(sessionStorage.currentThread));
+  }, [data, err]);
+
 
   const handleInputChange = (e) => {
     setNewDiscussion(e.target.value);
@@ -37,12 +43,13 @@ function Discussion(props) {
         newThreadObj
       );
       setThreads([...threads, response.data]);
-      setCurrentThread(response.data);
+      setCurrentThread({...response.data});
+      sessionStorage.currentThread = JSON.stringify(response.data);
       setError("");
-      // sessionStorage.currentThread = JSON.stringify(response.data);
     } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }
+    console.log(JSON.parse(sessionStorage.currentThread))
     setNewDiscussion("");
   }
 
@@ -64,7 +71,7 @@ function Discussion(props) {
               {projectData.members.map((member, index) => {
                 return (
                   <p className="mb-0 text-secondary fst-italic" key={index}>
-                    <FaUser className="text-primary me-2"/>
+                    <FaUser className="text-primary me-2" />
                     {member}
                   </p>
                 );
@@ -94,11 +101,13 @@ function Discussion(props) {
               Start Thread
             </Button>
           </Form>{" "}
-          {currentThread && (
+          {sessionStorage.currentThread && (
             <Thread
               user={JSON.parse(sessionStorage.userData).email}
-              thread={currentThread}
+              thread={JSON.parse(sessionStorage.currentThread)}
               setCurrentThread={setCurrentThread}
+              threads={threads}
+              setThreads={setThreads}
               project={projectData}
             />
           )}
