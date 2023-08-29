@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
-import { FaPlus, FaUser } from "react-icons/fa";
+import { FaPlus, FaUser, FaFile } from "react-icons/fa";
 import axios from "axios";
 import Thread from "../Thread";
 import SideNav from "../SideNav";
@@ -15,6 +15,8 @@ function Discussion(props) {
     sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
   );
   const [render, setRender] = useState(false);
+  const [attachment, setAttachment] = useState(null);
+  const attachmentFormats = ".pdf, .png, .jpg, txt";
   
 
   useEffect(() => {
@@ -44,6 +46,34 @@ function Discussion(props) {
       setError(error.response?.data?.Error || "Failed to create thread");
     }
     setNewDiscussion("");
+  }
+
+  const handleAttachmentChange = (e) => {
+    setAttachment(e.target.files[0]);
+  };
+
+  async function handleAttachmentUpload(e) {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", attachment);
+    formData.append("projectId", projectData.id);
+    formData.append("authorId", JSON.parse(sessionStorage.userData).id);
+    
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/v1/attachments",
+        formData,  {headers: {
+          "Content-Type": "multipart/form-data",
+        }},
+      );
+      console.log("Attachment uploaded:", response.data);
+      setAttachment(null);
+      setRender(!render);
+      setError("");
+    } catch (error) {
+      console.error("Attachment upload error:", error);
+      setError("Failed to upload attachment");
+    }
   }
 
   return (
@@ -104,6 +134,24 @@ function Discussion(props) {
               setRender={setRender}
             />
           )}
+          <Form onSubmit={handleAttachmentUpload} className="d-flex">
+            <Form.Group controlId="attachment" className="flex-grow-1 me-2 text-start">
+              <Form.Label>Add Attachment</Form.Label>
+              <Form.Control
+                type="file"
+                accept={attachmentFormats}
+                onChange={handleAttachmentChange}
+                required
+              />
+            </Form.Group>
+            <Button
+              variant="primary"
+              type="submit"
+              className="d-flex align-items-center mt-auto px-3"
+            >
+              Upload <FaFile className="ms-2"/> 
+            </Button>
+          </Form>
         </div>
         <SideNav projectData={projectData} />
       </div>
