@@ -67,7 +67,9 @@ function DiscussionsBoard() {
             </Card.Body>
           </Card>
           {threads &&
-            threads.map((thread) => {
+            threads
+            .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
+            .map((thread) => {
               return (
                 <Thread
                   key={thread.id}

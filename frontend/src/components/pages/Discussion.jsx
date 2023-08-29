@@ -18,7 +18,7 @@ function Discussion(props) {
   
 
   useEffect(() => {
-    setCurrentThread(sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread))
+    setCurrentThread(JSON.parse(sessionStorage.currentThread))
   }, [render]);
 
   const handleInputChange = (e) => {
@@ -37,6 +37,8 @@ function Discussion(props) {
         newThreadObj
       );
       setCurrentThread(response.data);
+      sessionStorage.currentThread = JSON.stringify(response.data);
+      setRender(!render);
       setError("");
     } catch (error) {
       setError(error.response?.data?.Error || "Failed to create thread");
