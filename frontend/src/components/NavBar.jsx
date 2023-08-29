@@ -12,6 +12,7 @@ function NavBar() {
         {currentUser ? (
           <Nav.Link
             onClick={() => {
+              sessionStorage.currentThread = null;
               navigate("/projects/dashboard");
             }}
           >
