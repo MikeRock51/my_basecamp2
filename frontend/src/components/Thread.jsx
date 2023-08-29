@@ -23,7 +23,6 @@ function Thread(props) {
           `http://0.0.0.0:8000/api/v1/threads/${props.thread.id}`
         );
         setCurrentThread(response.data);
-        // props.setCurrentThread(response.data);
         setError("");
       } catch (error) {
         console.log(error);
@@ -204,8 +203,8 @@ function Thread(props) {
             )}
           </div>
         </Card.Header>
-        <Card.Body className="thread-chat" ref={messageListRef}>
-          <div className="message-list text-start">
+        <Card.Body className="thread-chat">
+          <div className="message-list text-start" ref={messageListRef}>
             {currentThread &&
               currentThread.messages
                 .sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt))
