@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
-import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
+import { FaTrash, FaEdit, FaCommentAlt, FaUser } from "react-icons/fa";
 import axios from "axios";
+import useFetch from "./utils/useFetch";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
@@ -14,6 +15,9 @@ function Thread(props) {
   const currentUser =
     sessionStorage.userData && JSON.parse(sessionStorage.userData);
   const [currentThread, setCurrentThread] = useState(null);
+  const { data: author } = useFetch(`/users/${currentUser.id}`);
+  const isProjectAuthor = currentUser.email === props.project.author;
+  const isThreadAuthor = currentUser.id === props.thread.authorId;
 
   useEffect(() => {
     async function fetchData() {
@@ -34,12 +38,13 @@ function Thread(props) {
   async function deleteThread() {
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
+        `http://0.0.0.0:8000/api/v1/threads/${currentThread.id}`
       );
       sessionStorage.currentThread = null;
-      props.setThreads && props.setThreads(
-        props.threads.filter((thread) => thread.id !== currentThread.id)
-      );
+      props.setThreads &&
+        props.setThreads(
+          props.threads.filter((thread) => thread.id !== currentThread.id)
+        );
       sessionStorage.currentThread = null;
       setCurrentThread(null);
       sessionStorage.currentThread = null;
@@ -54,7 +59,7 @@ function Thread(props) {
   async function handleDeleteMessage(index, messageID) {
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/api/v1/messages/${currentThread.id}/${messageID}`
+        `http://0.0.0.0:8000/api/v1/messages/${currentThread.id}/${messageID}`
       );
       const updatedMessages = currentThread.messages.filter(
         (msg, idx) => idx !== index
@@ -79,7 +84,7 @@ function Thread(props) {
     if (editedMessage.trim() !== "") {
       try {
         const response = await axios.put(
-          `http://127.0.0.1:8000/api/v1/messages/${currentThread.id}/${messageID}`,
+          `http://0.0.0.0:8000/api/v1/messages/${currentThread.id}/${messageID}`,
           { message: editedMessage }
         );
         const updatedThread = currentThread;
@@ -109,7 +114,7 @@ function Thread(props) {
       };
       try {
         const response = await axios.post(
-          "http://127.0.0.1:8000/api/v1/messages",
+          "http://0.0.0.0:8000/api/v1/messages",
           newMessageObj
         );
         currentThread.messages.push(response.data);
@@ -132,7 +137,7 @@ function Thread(props) {
       };
       try {
         const response = await axios.put(
-          `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`,
+          `http://0.0.0.0:8000/api/v1/threads/${currentThread.id}`,
           editData
         );
         sessionStorage.currentThread = JSON.stringify(response.data);
@@ -165,43 +170,57 @@ function Thread(props) {
       {error && <Alert variant="danger">{error}</Alert>}
 
       <Card className="my-3">
-        <Card.Header className="bg-primary-subtle d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center">
-            <FaCommentAlt className="me-2 text-primary" />
-            {isEditing ? (
-              <Form.Control
-                type="text"
-                value={editedTopic}
-                onChange={(e) => setEditedTopic(e.target.value)}
-              />
-            ) : (
-              <h6 className="mb-0">{currentThread && currentThread.topic}</h6>
-            )}
+        <Card.Header className="bg-primary-subtle pb-0">
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center">
+              <FaCommentAlt className="me-2 text-primary" />
+              {isEditing ? (
+                <Form.Control
+                  type="text"
+                  value={editedTopic}
+                  onChange={(e) => setEditedTopic(e.target.value)}
+                />
+              ) : (
+                <h6 className="mb-0">{currentThread && currentThread.topic}</h6>
+              )}
+            </div>
+            <div>
+              {isEditing ? (
+                <Button
+                  variant="link"
+                  className="p-0"
+                  onClick={handleEditTopic}
+                >
+                  Save
+                </Button>
+              ) : (
+                (isThreadAuthor || isProjectAuthor) && (
+                  <>
+                    <Button
+                      variant="link"
+                      className="p-0"
+                      onClick={() => {
+                        setEditedTopic(currentThread.topic);
+                        setIsEditing(true);
+                      }}
+                    >
+                      <FaEdit className="text-primary-emphasis me-2" />
+                    </Button>
+                    <Button
+                      variant="link"
+                      className="p-0"
+                      onClick={deleteThread}
+                    >
+                      <FaTrash className="text-primary-emphasis" />
+                    </Button>
+                  </>
+                )
+              )}
+            </div>
           </div>
-          <div>
-            {isEditing ? (
-              <Button variant="link" className="p-0" onClick={handleEditTopic}>
-                Save
-              </Button>
-            ) : (
-              currentUser.email === props.project.author && (
-                <>
-                  <Button
-                    variant="link"
-                    className="p-0"
-                    onClick={() => {
-                      setEditedTopic(currentThread.topic);
-                      setIsEditing(true);
-                    }}
-                  >
-                    <FaEdit className="text-primary-emphasis me-2" />
-                  </Button>
-                  <Button variant="link" className="p-0" onClick={deleteThread}>
-                    <FaTrash className="text-primary-emphasis" />
-                  </Button>
-                </>
-              )
-            )}
+          <div className="d-flex mt-1">
+            <p className="text-start">{author && author.email}</p>
+            <FaUser className="ms-2 mt-1 text-warning" />
           </div>
         </Card.Header>
         <Card.Body className="thread-chat">

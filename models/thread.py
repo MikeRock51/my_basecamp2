@@ -13,3 +13,4 @@ class Thread(BaseModel, Base):
     topic = Column(String(256), nullable=False)
     projectId = Column(String(60), ForeignKey("projects.id"), nullable=False)
     messages = relationship('Message', backref='thread', cascade='all, delete')
+    authorId = Column(String(60), ForeignKey('users.id'), nullable=False)

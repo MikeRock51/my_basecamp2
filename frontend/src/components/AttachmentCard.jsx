@@ -22,7 +22,7 @@ function renderFileTypeIcon(type) {
   } else if (images.includes(type)) {
     return <FaFileImage className="text-primary"/>;
   } else {
-    return <FaFile className="text-secondary"/>;
+    return <FaFile className="text-danger-emphasis"/>;
   }
 }
 

@@ -35,6 +35,7 @@ function Discussion(props) {
     const newThreadObj = {
       topic: newDiscussion,
       projectId: projectData.id,
+      authorId: JSON.parse(sessionStorage.userData).id,
     };
     try {
       const response = await axios.post(

@@ -16,7 +16,7 @@ def createThread():
     if not threadData:
         return jsonify({"Error": "Not a JSON"}), 400
 
-    requiredFields = ['topic', 'projectId']
+    requiredFields = ['topic', 'projectId', 'authorId']
     for field in requiredFields:
         if field not in threadData:
             return jsonify({"Error": f"{field} is missing"}), 400
@@ -25,7 +25,7 @@ def createThread():
     if not project:
         return jsonify({"Error": "Project not found"}), 404
 
-    thread = Thread(topic=threadData['topic'], projectId=threadData['projectId'])
+    thread = Thread(topic=threadData['topic'], projectId=threadData['projectId'], authorId=threadData['authorId'])
     thread.save()
     thread = thread.toDict()
     thread['messages'] = []
