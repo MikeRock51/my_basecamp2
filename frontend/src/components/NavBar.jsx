@@ -19,36 +19,49 @@ function NavBar() {
             <h4>Project Dashboard</h4>
           </Nav.Link>
         ) : (
-          <h4>Basecamp 2.0</h4>
+          <Nav.Link
+            onClick={() => {
+              sessionStorage.currentThread = null;
+              navigate("/");
+            }}
+          >
+            <h4>Basecamp 2.0</h4>
+          </Nav.Link>
         )}
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="navbar-nav" />
       <Navbar.Collapse id="navbar-nav" className="my-1">
         <Nav className="ml-auto ms-auto pe-4">
-          <Nav.Link
-            onClick={() => {
-              navigate("/projects/new");
-            }}
-          >
-            Add Project
-          </Nav.Link>
-          <Nav.Link
-            onClick={() => {
-              navigate(`/users/edit/${currentUser.id}`, {
-                state: { userData: currentUser },
-              });
-            }}
-          >
-            Edit Profile
-          </Nav.Link>
-          <Nav.Link
-            onClick={() => {
-              sessionStorage.clear();
-              navigate("/sign-in");
-            }}
-          >
-            Log Out
-          </Nav.Link>
+          {currentUser && (
+            <Nav.Link
+              onClick={() => {
+                navigate("/projects/new");
+              }}
+            >
+              Add Project
+            </Nav.Link>
+          )}
+          {currentUser && (
+            <Nav.Link
+              onClick={() => {
+                navigate(`/users/edit/${currentUser.id}`, {
+                  state: { userData: currentUser },
+                });
+              }}
+            >
+              Edit Profile
+            </Nav.Link>
+          )}
+          {currentUser && (
+            <Nav.Link
+              onClick={() => {
+                sessionStorage.clear();
+                navigate("/sign-in");
+              }}
+            >
+              Log Out
+            </Nav.Link>
+          )}
         </Nav>
       </Navbar.Collapse>
     </Navbar>

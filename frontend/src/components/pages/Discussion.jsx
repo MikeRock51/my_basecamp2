@@ -20,7 +20,7 @@ function Discussion(props) {
   
 
   useEffect(() => {
-    setCurrentThread(JSON.parse(sessionStorage.currentThread))
+    setCurrentThread(sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread));
   }, [render]);
 
   const handleInputChange = (e) => {
@@ -35,7 +35,7 @@ function Discussion(props) {
     };
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/threads",
+        "http://0.0.0.0:8000/api/v1/threads",
         newThreadObj
       );
       setCurrentThread(response.data);
@@ -61,7 +61,7 @@ function Discussion(props) {
     
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/v1/attachments",
+        "http://0.0.0.0:8000/api/v1/attachments",
         formData,  {headers: {
           "Content-Type": "multipart/form-data",
         }},
@@ -134,7 +134,7 @@ function Discussion(props) {
               setRender={setRender}
             />
           )}
-          <Form onSubmit={handleAttachmentUpload} className="d-flex">
+          <Form onSubmit={handleAttachmentUpload} className="d-flex mt-5">
             <Form.Group controlId="attachment" className="flex-grow-1 me-2 text-start">
               <Form.Label>Add Attachment</Form.Label>
               <Form.Control
