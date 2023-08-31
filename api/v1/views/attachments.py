@@ -3,9 +3,10 @@
 
 from models.attachment import Attachment
 from api.v1.views import app_views
-from flask import jsonify, request, current_app
+from flask import jsonify, request, current_app, send_from_directory
 from werkzeug.utils import secure_filename
 import os
+from models import storage
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'gif'}
 
@@ -47,10 +48,22 @@ def upload_file():
     attachment.save()
     return jsonify({"message": f"{filename} uploaded successfully"}), 201
 
+@app_views.route('/attachments/<attachmentID>', strict_slashes=False)
+def getAttachement(attachmentID):
+    """Returns the attachment object with the attachmentID"""
+    attachment = storage.get(Attachment, attachmentID)
+    if not attachment:
+        abort(404)
 
-# @app_views.route('/attachments/<fileName>', methods=['GET'], strict_slashes=False)
-# def download_file(fileName):
-#     return f'''
-#     <!doctype html>
-#     <h1>File {name} Uploaded Successfully</h1>
-#     '''
+    return jsonify(attachment.toDict())
+
+@app_views.route('/attachments/<attachmentID>/file', strict_slashes=False)
+def downloadAttachement(attachmentID):
+    """Returns the attachment file with the attachmentID"""
+    attachment = storage.get(Attachment, attachmentID)
+    if not attachment:
+        abort(404)
+
+    UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
+
+    return send_from_directory(UPLOAD_FOLDER, attachment.name)

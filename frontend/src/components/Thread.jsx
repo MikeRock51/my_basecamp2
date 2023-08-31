@@ -38,10 +38,12 @@ function Thread(props) {
         `http://127.0.0.1:8000/api/v1/threads/${currentThread.id}`
       );
       sessionStorage.currentThread = null;
-      props.setThreads(
+      props.setThreads && props.setThreads(
         props.threads.filter((thread) => thread.id !== currentThread.id)
       );
+      sessionStorage.currentThread = null;
       setCurrentThread(null);
+      sessionStorage.currentThread = null;
       props.setRender(!props.render);
       setError("");
     } catch (error) {
