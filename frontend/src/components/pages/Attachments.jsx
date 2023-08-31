@@ -12,6 +12,7 @@ function Attachments() {
   const projectData = location.state.projectData;
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [render, setRender] = useState(false);
 
   useEffect(() => {
     async function fetchAttachments() {
@@ -26,7 +27,7 @@ function Attachments() {
       }
     }
     fetchAttachments();
-  }, []);
+  }, [render]);
 
   return (
     <Container className="">
@@ -70,6 +71,9 @@ function Attachments() {
                   key={attachment.id}
                   setSuccess={setSuccess}
                   setError={setError}
+                  projectData={projectData}
+                  render={render}
+                  setRender={setRender}
                 />
               );
             })}

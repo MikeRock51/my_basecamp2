@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Container, Alert, Form, Button, Card } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { FaPlus, FaUser, FaFile } from "react-icons/fa";
@@ -11,16 +11,19 @@ function Discussion(props) {
   const [newDiscussion, setNewDiscussion] = useState("");
   const projectData = location.state.projectData;
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState('');
   const [currentThread, setCurrentThread] = useState(
     sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread)
   );
   const [render, setRender] = useState(false);
   const [attachment, setAttachment] = useState(null);
-  const attachmentFormats = ".pdf, .png, .jpg, txt";
+  const attachmentFormats = ".pdf, .png, .jpg, .txt";
+  const attachmentInputRef = useRef(null);
   
 
   useEffect(() => {
     setCurrentThread(sessionStorage.currentThread && JSON.parse(sessionStorage.currentThread));
+    setAttachment(null);
   }, [render]);
 
   const handleInputChange = (e) => {
@@ -60,6 +63,7 @@ function Discussion(props) {
     formData.append("authorId", JSON.parse(sessionStorage.userData).id);
     
     try {
+      setSuccess('');
       const response = await axios.post(
         "http://0.0.0.0:8000/api/v1/attachments",
         formData,  {headers: {
@@ -68,11 +72,17 @@ function Discussion(props) {
       );
       console.log("Attachment uploaded:", response.data);
       setAttachment(null);
+      if (attachmentInputRef.current) {
+        attachmentInputRef.current.value = "";
+      }
+  
+      setSuccess(`File uploaded successfully`);
       setRender(!render);
       setError("");
     } catch (error) {
       console.error("Attachment upload error:", error);
       setError("Failed to upload attachment");
+      setSuccess('');
     }
   }
 
@@ -83,7 +93,16 @@ function Discussion(props) {
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}
         </p>
-        {error && <Alert variant="danger" dismissible>{error}</Alert>}
+        {error && (
+          <Alert variant="danger" dismissible>
+            {error}
+          </Alert>
+        )}
+        {success && (
+          <Alert variant="success" dismissible>
+            {success}
+          </Alert>
+        )}
       </div>
       <div className="d-flex">
         <div className="w-75">
@@ -141,6 +160,7 @@ function Discussion(props) {
                 type="file"
                 accept={attachmentFormats}
                 onChange={handleAttachmentChange}
+                ref={attachmentInputRef}
                 required
               />
             </Form.Group>

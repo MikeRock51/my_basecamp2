@@ -81,3 +81,13 @@ def getAttachements():
         attachmentList.append(attachment.toDict())
     
     return jsonify(attachmentList), 200
+
+@app_views.route('/attachments/<attachmentID>', methods=['DELETE'], strict_slashes=False)
+def deleteAttachement(attachmentID):
+    """Deletes the attachment with the attachmentID from storage"""
+    attachment = storage.get(Attachment, attachmentID)
+    if not attachment:
+        abort(404)
+
+    storage.delete(attachment)
+    return jsonify({}), 200

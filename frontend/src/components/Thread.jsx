@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 import { Card, Form, Button, Alert } from "react-bootstrap";
 import { FaTrash, FaEdit, FaCommentAlt } from "react-icons/fa";
 import axios from "axios";
-// import useFetch from "./utils/useFetch";
 
 function Thread(props) {
   const [newMessage, setNewMessage] = useState("");
@@ -30,7 +29,7 @@ function Thread(props) {
       }
     }
     fetchData();
-  }, [props.render]);
+  }, [props.render, props.thread.id]);
 
   async function deleteThread() {
     try {

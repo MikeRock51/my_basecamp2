@@ -30,17 +30,6 @@ function DiscussionsBoard() {
     fetchData();
   }, [render]);
 
-  // function setCurrentThread(updatedThread) {
-  //   const threadIndex = threads.findIndex(
-  //     (thread) => thread.id === updatedThread.id
-  //   );
-
-  //   const updatedThreads = [...threads];
-  //   updatedThreads[threadIndex] = updatedThread;
-
-  //   setThreads(updatedThreads);
-  // }
-
   return (
     <Container className="">
       <div className="">
