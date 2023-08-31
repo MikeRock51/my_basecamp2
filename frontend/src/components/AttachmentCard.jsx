@@ -20,9 +20,9 @@ function renderFileTypeIcon(type) {
   if (type === "pdf") {
     return <FaFilePdf className="text-danger" />;
   } else if (images.includes(type)) {
-    return <FaFileImage className="text-primary"/>;
+    return <FaFileImage className="text-primary" />;
   } else {
-    return <FaFile className="text-danger-emphasis"/>;
+    return <FaFile className="text-danger-emphasis" />;
   }
 }
 
@@ -31,7 +31,7 @@ const AttachmentCard = (props) => {
   const type = getFileExtension(attachment.name);
   const currentUser =
     sessionStorage.userData && JSON.parse(sessionStorage.userData);
-  const {data: author} = useFetch(`/users/${attachment.authorId}`);
+  const { data: author } = useFetch(`/users/${attachment.authorId}`);
 
   function downloadAttachment() {
     try {
@@ -67,24 +67,25 @@ const AttachmentCard = (props) => {
           <div className="me-3 d-flex text-start">
             {renderFileTypeIcon(type)}
             <div>
-            <h6 className="mb-0 ms-2">{attachment.name}</h6>
-            <p><FaUser/> {author && author.email}</p>
-          </div>
+              <h6 className="mb-0 ms-2">{attachment.name}</h6>
+              <p>
+                <FaUser /> {author && author.email}
+              </p>
+            </div>
           </div>
         </div>
         <div className="d-flex mt-3">
-          {props.projectData.authorId === currentUser.id ||
-            (attachment.authorId === currentUser.id && (
-              <Button
-                variant="danger"
-                className="text-start me-auto"
-                onClick={() => {
-                  deleteAttachment();
-                }}
-              >
-                <FaTrash />
-              </Button>
-            ))}
+          {(props.projectData.admin || attachment.authorId === currentUser.id) && (
+            <Button
+              variant="danger"
+              className="text-start me-auto"
+              onClick={() => {
+                deleteAttachment();
+              }}
+            >
+              <FaTrash />
+            </Button>
+          )}
           <Button
             variant="primary"
             download={attachment.name}

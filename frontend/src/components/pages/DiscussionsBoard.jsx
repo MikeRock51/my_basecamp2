@@ -28,7 +28,7 @@ function DiscussionsBoard() {
       }
     }
     fetchData();
-  }, [render]);
+  }, [render, projectData]);
 
   return (
     <Container className="">

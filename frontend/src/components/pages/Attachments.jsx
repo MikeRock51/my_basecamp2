@@ -18,16 +18,17 @@ function Attachments() {
     async function fetchAttachments() {
       try {
         const response = await axios.get(
-          `http://0.0.0.0:8000/api/v1/attachments`
+          `http://0.0.0.0:8000/api/v1/projects/attachments/${projectData.id}`
         );
         setAttachments(response.data);
+        setError("");
       } catch (error) {
         console.log(error);
         setError(error.response?.data?.Error || "Error fetching attachments");
       }
     }
     fetchAttachments();
-  }, [render]);
+  }, [render, projectData]);
 
   return (
     <Container className="">

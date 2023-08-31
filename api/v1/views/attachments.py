@@ -3,10 +3,11 @@
 
 from models.attachment import Attachment
 from api.v1.views import app_views
-from flask import jsonify, request, current_app, send_from_directory, make_response
+from flask import jsonify, request, current_app, send_from_directory, make_response, abort
 from werkzeug.utils import secure_filename
 import os
 from models import storage
+from models.project import Project
 
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'gif'}
 
@@ -71,14 +72,19 @@ def downloadAttachement(attachmentID):
 
     return response
 
-@app_views.route('/attachments', strict_slashes=False)
-def getAttachements():
+@app_views.route('/projects/attachments/<projectID>', strict_slashes=False)
+def getAttachements(projectID):
     """Retrieves all attachment objects from storage"""
+    project = storage.get(Project, projectID)
+    if not project:
+        abort(404)
+
     attachments = storage.all(Attachment)
     attachmentList = []
 
     for attachment in attachments.values():
-        attachmentList.append(attachment.toDict())
+        if attachment.projectId == project.id:
+            attachmentList.append(attachment.toDict())
     
     return jsonify(attachmentList), 200
 
