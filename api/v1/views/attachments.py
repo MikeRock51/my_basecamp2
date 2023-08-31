@@ -3,7 +3,7 @@
 
 from models.attachment import Attachment
 from api.v1.views import app_views
-from flask import jsonify, request, current_app, send_from_directory
+from flask import jsonify, request, current_app, send_from_directory, make_response
 from werkzeug.utils import secure_filename
 import os
 from models import storage
@@ -55,7 +55,7 @@ def getAttachement(attachmentID):
     if not attachment:
         abort(404)
 
-    return jsonify(attachment.toDict())
+    return jsonify(attachment.toDict()), 200
 
 @app_views.route('/attachments/<attachmentID>/file', strict_slashes=False)
 def downloadAttachement(attachmentID):
@@ -66,4 +66,18 @@ def downloadAttachement(attachmentID):
 
     UPLOAD_FOLDER = current_app.config['UPLOAD_FOLDER']
 
-    return send_from_directory(UPLOAD_FOLDER, attachment.name)
+    response = make_response(send_from_directory(UPLOAD_FOLDER, attachment.name))
+    response.headers['Content-Disposition'] = f'attachment; filename="{attachment.name}"'
+
+    return response
+
+@app_views.route('/attachments', strict_slashes=False)
+def getAttachements():
+    """Retrieves all attachment objects from storage"""
+    attachments = storage.all(Attachment)
+    attachmentList = []
+
+    for attachment in attachments.values():
+        attachmentList.append(attachment.toDict())
+    
+    return jsonify(attachmentList), 200

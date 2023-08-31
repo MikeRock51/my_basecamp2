@@ -16,6 +16,7 @@ import Discussion from "./components/pages/Discussion";
 import MembersBoard from "./components/pages/MembersBoard";
 import NavBar from "./components/NavBar";
 import DiscussionsBoard from "./components/pages/DiscussionsBoard";
+import Attachments from "./components/pages/Attachments";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/projects/:projectId/discussion" element={<Discussion />} />
           <Route path="/projects/:projectId/members" element={<MembersBoard />} />
           <Route path="/projects/:projectId/topics" element={<DiscussionsBoard />} />
+          <Route path="/projects/:projectId/attachments" element={<Attachments />} />
         </Routes>
       </div>
     </Router>

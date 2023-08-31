@@ -83,7 +83,7 @@ function Discussion(props) {
         <p className="mb-4 text-secondary fst-italic">
           <FaUser className="me-2 text-primary" /> {projectData.author}
         </p>
-        {error && <Alert variant="danger">{error}</Alert>}
+        {error && <Alert variant="danger" dismissible>{error}</Alert>}
       </div>
       <div className="d-flex">
         <div className="w-75">

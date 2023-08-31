@@ -16,15 +16,17 @@ function SideNav(props) {
       <Button
         variant="primary"
         type="submit"
-        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${currentPath === projectPath ? 'active' : ''}`}
+        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${
+          currentPath === projectPath ? "active" : ""
+        }`}
         onClick={() => {
-            navigate(`/projects/${props.projectData.id}/discussion`, {
-              state: {
-                projectData: props.projectData,
-                threads: props.threads,
-              },
-            });
-          }}
+          navigate(`/projects/${props.projectData.id}/discussion`, {
+            state: {
+              projectData: props.projectData,
+              threads: props.threads,
+            },
+          });
+        }}
       >
         <FaProjectDiagram className="me-2" />
         Project
@@ -32,7 +34,9 @@ function SideNav(props) {
       <Button
         variant="primary"
         type="submit"
-        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${currentPath === membersPath ? 'active' : ''}`}
+        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${
+          currentPath === membersPath ? "active" : ""
+        }`}
         onClick={() => {
           navigate(`/projects/${props.projectData.id}/members`, {
             state: {
@@ -48,7 +52,9 @@ function SideNav(props) {
       <Button
         variant="primary"
         type="submit"
-        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${currentPath === topicsPath ? 'active' : ''}`}
+        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${
+          currentPath === topicsPath ? "active" : ""
+        }`}
         onClick={() => {
           navigate(`/projects/${props.projectData.id}/topics`, {
             state: {
@@ -64,7 +70,17 @@ function SideNav(props) {
       <Button
         variant="primary"
         type="submit"
-        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${currentPath === attachmentPath ? 'active' : ''}`}
+        className={`mb-2 w-100 d-flex align-items-center mt-auto px-3 ${
+          currentPath === attachmentPath ? "active" : ""
+        }`}
+        onClick={() => {
+          navigate(`/projects/${props.projectData.id}/attachments`, {
+            state: {
+              projectData: props.projectData,
+              threads: props.threads,
+            },
+          });
+        }}
       >
         <FaFile className="me-2" />
         Attachments
