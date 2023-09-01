@@ -28,7 +28,7 @@ function EditUser() {
     console.log(formData);
     try {
       await axios.put(
-        `127.0.0.1:8000/api/v1/users/${userData.id}`,
+        `https://basecamp.mikerock.tech/api/v1/users/${userData.id}`,
         formData
       );
       navigate('/projects/dashboard', {
@@ -44,7 +44,7 @@ function EditUser() {
 
   async function handleDelete() {
     try {
-    await axios.delete(`127.0.0.1:8000/api/v1/users/${userData.id}`)
+    await axios.delete(`https://basecamp.mikerock.tech/api/v1/users/${userData.id}`)
     console.log(`user ${userData.name} deleted successfully`);
     sessionStorage.clear();
     navigate('/sign-in');

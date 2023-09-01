@@ -18,7 +18,7 @@ function Attachments() {
     async function fetchAttachments() {
       try {
         const response = await axios.get(
-          `http://0.0.0.0:8000/api/v1/projects/attachments/${projectData.id}`
+          `https://basecamp.mikerock.tech/api/v1/projects/attachments/${projectData.id}`
         );
         setAttachments(response.data);
         setError("");

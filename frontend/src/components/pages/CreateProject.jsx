@@ -31,7 +31,7 @@ function CreateProject() {
     formData.author = JSON.parse(sessionStorage.userData).email;
     try {
       await axios.post(
-        `http://127.0.0.1:8000/api/v1/projects/${userID}`,
+        `https://basecamp.mikerock.tech/api/v1/projects/${userID}`,
         formData
       );
       console.log("Project created successfully");

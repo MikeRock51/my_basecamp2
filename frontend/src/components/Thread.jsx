@@ -15,7 +15,7 @@ function Thread(props) {
   const currentUser =
     sessionStorage.userData && JSON.parse(sessionStorage.userData);
   const [currentThread, setCurrentThread] = useState(null);
-  const { data: author } = useFetch(`/users/${currentUser.id}`);
+  const { data: author } = useFetch(`/users/${props.thread.authorId}`);
   const isProjectAuthor = currentUser.email === props.project.author;
   const isThreadAuthor = currentUser.id === props.thread.authorId;
 
@@ -23,7 +23,7 @@ function Thread(props) {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://0.0.0.0:8000/api/v1/threads/${props.thread.id}`
+          `https://basecamp.mikerock.tech/api/v1/threads/${props.thread.id}`
         );
         setCurrentThread(response.data);
         setError("");
@@ -38,7 +38,7 @@ function Thread(props) {
   async function deleteThread() {
     try {
       await axios.delete(
-        `http://0.0.0.0:8000/api/v1/threads/${currentThread.id}`
+        `https://basecamp.mikerock.tech/api/v1/threads/${currentThread.id}`
       );
       sessionStorage.currentThread = null;
       props.setThreads &&
@@ -59,7 +59,7 @@ function Thread(props) {
   async function handleDeleteMessage(index, messageID) {
     try {
       await axios.delete(
-        `http://0.0.0.0:8000/api/v1/messages/${currentThread.id}/${messageID}`
+        `https://basecamp.mikerock.tech/api/v1/messages/${currentThread.id}/${messageID}`
       );
       const updatedMessages = currentThread.messages.filter(
         (msg, idx) => idx !== index
@@ -84,7 +84,7 @@ function Thread(props) {
     if (editedMessage.trim() !== "") {
       try {
         const response = await axios.put(
-          `http://0.0.0.0:8000/api/v1/messages/${currentThread.id}/${messageID}`,
+          `https://basecamp.mikerock.tech/api/v1/messages/${currentThread.id}/${messageID}`,
           { message: editedMessage }
         );
         const updatedThread = currentThread;
@@ -114,7 +114,7 @@ function Thread(props) {
       };
       try {
         const response = await axios.post(
-          "http://0.0.0.0:8000/api/v1/messages",
+          "https://basecamp.mikerock.tech/api/v1/messages",
           newMessageObj
         );
         currentThread.messages.push(response.data);
@@ -137,7 +137,7 @@ function Thread(props) {
       };
       try {
         const response = await axios.put(
-          `http://0.0.0.0:8000/api/v1/threads/${currentThread.id}`,
+          `https://basecamp.mikerock.tech/api/v1/threads/${currentThread.id}`,
           editData
         );
         sessionStorage.currentThread = JSON.stringify(response.data);

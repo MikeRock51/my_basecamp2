@@ -39,7 +39,7 @@ function Discussion(props) {
     };
     try {
       const response = await axios.post(
-        "http://0.0.0.0:8000/api/v1/threads",
+        "https://basecamp.mikerock.tech/api/v1/threads",
         newThreadObj
       );
       setCurrentThread(response.data);
@@ -66,7 +66,7 @@ function Discussion(props) {
     try {
       setSuccess('');
       const response = await axios.post(
-        "http://0.0.0.0:8000/api/v1/attachments",
+        "https://basecamp.mikerock.tech/api/v1/attachments",
         formData,  {headers: {
           "Content-Type": "multipart/form-data",
         }},

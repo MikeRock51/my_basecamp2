@@ -45,7 +45,7 @@ function EditProject() {
     }
     try {
       await axios.put(
-        `http://127.0.0.1:8000/api/v1/projects/${projectData.id}`,
+        `https://basecamp.mikerock.tech/api/v1/projects/${projectData.id}`,
         formData
       );
       navigate("/projects/dashboard", {
@@ -63,7 +63,7 @@ function EditProject() {
   async function handleDelete() {
     try {
       await axios.delete(
-        `http://127.0.0.1:8000/api/v1/projects/${projectData.id}`
+        `https://basecamp.mikerock.tech/api/v1/projects/${projectData.id}`
       );
       console.log(`Project ${projectData.name} deleted successfully`);
       navigate("/projects/dashboard", {

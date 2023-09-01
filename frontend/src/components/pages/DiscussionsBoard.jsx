@@ -18,7 +18,7 @@ function DiscussionsBoard() {
     async function fetchData() {
       try {
         const response = await axios.get(
-          `http://0.0.0.0:8000/api/v1/projects/${projectData.id}/threads`
+          `https://basecamp.mikerock.tech/api/v1/projects/${projectData.id}/threads`
         );
         setThreads([...response.data]);
         setError("");

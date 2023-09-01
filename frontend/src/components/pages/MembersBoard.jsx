@@ -27,7 +27,7 @@ function MembersBoard(props) {
     updatedMembers[index].isAdmin = !updatedMembers[index].isAdmin;
     try {
       await axios.put(
-        "http://0.0.0.0:8000/api/v1/members",
+        "https://basecamp.mikerock.tech/api/v1/members",
         updatedMembers[index]
       );
       setMembers(updatedMembers);
@@ -39,7 +39,7 @@ function MembersBoard(props) {
 
   async function removeMember(member) {
     try {
-      await axios.delete("http://0.0.0.0:8000/api/v1/members", {
+      await axios.delete("https://basecamp.mikerock.tech/api/v1/members", {
         data: member,
       });
       setMembers(members.filter((memb) => memb !== member));

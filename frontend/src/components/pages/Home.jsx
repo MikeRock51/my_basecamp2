@@ -26,8 +26,8 @@ function Home() {
       </div>
       <div>
         <h4 className="">
-          Welcome to Basecamp! Discover a new level of collaboration and
-          organization Basecamp.
+          Welcome to Mike Rock's Basecamp! Discover a new level of collaboration and
+          organization.
         </h4>
         <p className="text-start">
           Whether you're managing a team, planning a project, or coordinating
@@ -38,7 +38,7 @@ function Home() {
           and direct messages. Stay in the loop and keep everyone on
         </p>
         <h4>Contributors</h4>
-        <ul className="text-start fw-bold">
+        <div className=" fw-bold">
           <li>
             Michael Adebayo ={'>'} <a href="https://github.com/MikeRock51">Github</a>,{" "}
             <a href="https://twitter.com/Mike_Rock1">Twitter</a>,{" "}
@@ -47,15 +47,7 @@ function Home() {
             </a>{" "}
             <a href="mailto:mikerockmusic51@gmail.com">Email</a>
           </li>
-          <li>
-            Sunkanmi Adebiyi ={'>'}{" "}
-            <a href="https://github.com/Digiprog1">Github</a>,{" "}
-            <a href="https://twitter.com/SunkanmiADS">Twitter</a>,
-            <a href="https://www.linkedin.com/in/sunkanmi-adebiyi-708a8727/">
-              LinkedIn, <a href="mailto:adebiyiolasunkanmi@gmail.com">Email</a>
-            </a>
-          </li>
-        </ul>
+        </div>
       </div>
     </Container>
   );

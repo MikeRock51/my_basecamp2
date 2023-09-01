@@ -35,7 +35,7 @@ const AttachmentCard = (props) => {
 
   function downloadAttachment() {
     try {
-      window.location.href = `http://0.0.0.0:8000/api/v1/attachments/${attachment.id}/file`;
+      window.location.href = `https://basecamp.mikerock.tech/api/v1/attachments/${attachment.id}/file`;
       props.setSuccess(`File ${attachment.name} downloaded successfully`);
       props.setError("");
     } catch (error) {
@@ -48,7 +48,7 @@ const AttachmentCard = (props) => {
   async function deleteAttachment() {
     try {
       await axios.delete(
-        `http://0.0.0.0:8000/api/v1/attachments/${attachment.id}`
+        `https://basecamp.mikerock.tech/api/v1/attachments/${attachment.id}`
       );
       props.setSuccess(`File ${attachment.name} deleted successfully`);
       props.setError("");

@@ -13,10 +13,10 @@ function UserDashboard() {
   // async function fetchProjects() {
   //   try {
   //     const createdByMe = await axios.get(
-  //       `http://127.0.0.1:8000/api/v1/users/projects/${currentUser.id}`
+  //       `https://basecamp.mikerock.tech/api/v1/users/projects/${currentUser.id}`
   //     );
   //     const sharedWithMe = await axios.get(
-  //       `http://127.0.0.1:8000/api/v1/users/projects/shared/${currentUser.email}`
+  //       `https://basecamp.mikerock.tech/api/v1/users/projects/shared/${currentUser.email}`
   //     );
   //     setUserProjects(createdByMe.data);
   //     setSharedProjects(sharedWithMe.data);
