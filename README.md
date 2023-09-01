@@ -1,7 +1,7 @@
 ** IMPORTANT NOTICE **
-Kindly pay attention to the Usage section of this README to understand the workability of the Project. Project is hosted on [Deployed Project](http://mikerock.tech/) for easy access.
+Kindly pay attention to the Usage section of this README to understand the workability of the Project. Project is hosted on [Deployed Project](https://basecamp.mikerock.tech/) for easy access.
 
-# Welcome to My Basecamp 1
+# Welcome to My Basecamp 2
 A project management tool for developers.
 Welcome to Basecamp! Discover a new level of collaboration and organization Basecamp.
 Basecamp is a popular web-based project management and team collaboration software. 
@@ -49,34 +49,20 @@ How to install your project? npm install? make? make re?
 
 - Setup database
   - Install mysql-server: "apt install mysql-server"
-  - Setup database tables: From the project root directory, run "cat setupDatabase.sql | mysql
+  - Setup database tables: From the project root directory, run "cat setupDatabase.sql | mysql"
 
 - Start Backend Server
   - Start the backend server by running "BASECAMP_USER=basecamp_dev BASECAMP_PWD=basecamp_dev_pwd BASECAMP_HOST=localhost BASECAMP_DB=basecamp_db python3 -m api.v1.app"
 
 - Start Frontend Server
-  - Navigate to the Frontend directory and run "npm run"
+  - Navigate to the Frontend directory and run "npm start"
 
 - Visit http://127.0.0.1:3000 on your browser
 
-c. py -3 -m venv .venv - The command py -3 -m venv .venv is used to create the virtual environment for our Python 
-                        project. Breaking down the command:
-   py: This is the command used to invoke the Python interpreter. It's a shorthand for running Python scripts
-       or managing Python environments.
-   -3: This specifies that you want to use Python 3. When you have multiple versions of Python installed on
-       your system, using -3 ensures that Python 3.x is used.
-   -m venv: This part of the command instructs Python to use the built-in module venv to create a virtual 
-       environment. A virtual environment is an isolated environment that allows you to manage dependencies and 
-       packages separately from your system-wide Python installation.
-   .venv: This is the name of the directory where the virtual environment will be created. In this case, it's 
-       named .venv, but you can choose any name you prefer.
-d. .venv\Scripts\activate - used to activate the virtual environment on our operating system
-e. pip install Flask - used to download and install the Flask package from the Python Package Index (PyPI).
-f. npm install -g create-react-app. - used to install the "create-react-app" tool globally on your system. 
-    "create-react-app" is a command-line utility that helps you quickly set up and create new React.js 
-    applications with all the necessary configurations and dependencies.
-g. npm start. - is used to start our development server for the frontend part of our project built using React
-others are 
+### Dependencies
+- apt install nodejs
+- apt install python
+- apt install mysql-server
 - pip install sqlalchemy
 - pip install mysqlclient
 - pip install bcrypt 
@@ -88,22 +74,41 @@ How does it work?
 The Basecamp is built with a Model View Controller (MVC) design pattern, we implemented Object–relational 
 mapping (ORM) technique for the database. 
 You have the right to create a user and also display the user created, you can also delete a profile. 
-In order to create a User 
-- click on the link of the project (http://mikerock.tech/)
-- then click on sign up, after which you will sign in with the details of registration at sign up 
-You can also delete a user by doing the following
-- login with your details, 
-- then go to edit profile and you can either update or delete profile from there
-You can also make a user an admin from a particular project
-- this can be done by first creating a project, and adding users to the project. 
-- then you can click on edit icon from the projects lists, after which you will see the button to 
-make the user to become an admin, or remove from admin.
-Furthermore, you can create, update and delete a project as and when required. 
+#### In order to create a User 
+- Click on the link of the project [Deployed Project](https://basecamp.mikerock.tech/)
+- Then click on sign up, after which you will sign in with the details of registration at sign up 
+#### You can also delete a user by doing the following
+- Login with your details, 
+- Then go to edit profile and you can either update or delete profile from there
+#### To create a new project
+- Click the Add Project option and fill in the project details. Note that you have to be logged in.
+#### You can also make a user an admin of a particular project
+- This can be done by first creating the project, if not already done.
+- Then you can click on edit icon from the projects lists to go to the project edit page. Add the user's email to the Add Member field. Use the Admin toggle button to set their admin status. A user's Admin status is false by default.
+- You can also make a user change a members admin status by navigating to the project's discussion page and then to the members tab.
+- Furthermore, you can create, update and delete a project as and when required.
+#### To start a Discussion
+- Click on the chat icon of the target project and on the project tab, you simply type in the topic of the conversation and click the start thread button. This will open up a new thread for every member of the project to contribute.
+- You can edit the topic of a thread only if you created it or you are the author of the project.
+- Every user can edit/delete any message sent by them.
+- To access all topics/conversations going on a project, go to the Topics tab.
+#### Adding an Attachment
+- Every member of a project can add an attachment to a project by choosing a file on the Add Attachment field and clicking Upload. 
+- Supported formats are ['.pdf', '.txt', '.png', '.jpg']
+- To see all Attachments for a project, navigate to the Attachments tab
+- You can dowload any attachment from the page
+- Only the project creator or the creator of the Attachment can delete it
+
+#### Removing a member
+- Navigate to the members tab and click on the delete button next to the member you want to remove
+- You can also change a member's admin status by toggling the admin switch.
 
 ### The Core Team
-This project was a collaboration- based project. The contributors are 
-- Michael Adebayo OGTL Academy 
-- Olasunkanmi Adebiyi OGTL Academy 
+- Michael Adebayo OGTL Academy => <a href="https://github.com/MikeRock51">Github</a>,
+<a href="https://twitter.com/Mike_Rock1">Twitter</a>,
+<a href="https://www.linkedin.com/in/michael-adebayo-637507251/">LinkedIn</a>
+<a href="mailto:mikerockmusic51@gmail.com">Email</a>
+- [Deployed Project](https://basecamp.mikerock.tech/)
 
 <span><i>Made at <a href='https://qwasar.io'>Qwasar SV -- Software Engineering School</a></i></span>
 <span><img alt='Qwasar SV -- Software Engineering School's Logo' src='https://storage.googleapis.com/qwasar-public/qwasar-logo_50x50.png' width='20px'></span>
